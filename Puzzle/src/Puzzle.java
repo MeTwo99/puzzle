@@ -24,6 +24,7 @@ public class Puzzle extends Application {
 	private ArrayList<Element> levelElements = new ArrayList<Element>();
 
 	public static void main(String args[]) {
+		System.out.println("Hello world!");
 		Application.launch(args);
 	}
 
