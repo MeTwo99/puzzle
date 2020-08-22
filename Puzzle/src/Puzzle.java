@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -16,15 +17,14 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Puzzle extends Application {
-	public static final int MAX_WIDTH = 1000;
-	public static final int MAX_HEIGHT = 1000;
-	public static final String PATH = System.getProperty("user.dir");
 
+	private static final Image ZACK = new Image("file:"+PuzzleUtil.PATH+"/res/zack2.jpg",false);
+	
 	private LoadLevel levelCanvas;
 	private ArrayList<Element> levelElements = new ArrayList<Element>();
-
+	private Player zack = new Player();
+	
 	public static void main(String args[]) {
-		System.out.println("Hello world!");
 		Application.launch(args);
 	}
 
@@ -36,7 +36,7 @@ public class Puzzle extends Application {
 		levelCanvas = new LoadLevel();
 		fp.getChildren().add(levelCanvas);
 
-		Scene scene = new Scene(fp, MAX_WIDTH, MAX_HEIGHT);
+		Scene scene = new Scene(fp, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 		stage.setScene(scene);
 		stage.setTitle("Puzzle");
 		stage.show();
@@ -45,7 +45,7 @@ public class Puzzle extends Application {
 	private void createLevelElements(String levelName) {
 		try {
 			levelElements.clear();
-	        Scanner scan = new Scanner(new File(PATH+"/src/levels/"+levelName));
+	        Scanner scan = new Scanner(new File(PuzzleUtil.PATH+"/src/levels/"+levelName));
 	        while (scan.hasNextLine()) {
 	          String l = scan.nextLine();
 	          String[] data = l.split(",");
@@ -57,6 +57,9 @@ public class Puzzle extends Application {
 	          switch(data[0]) {
 	          case "t":
 	        	  levelElements.add(new Tile(v[0],v[1],v[2],v[3]));
+	        	  break;
+	          case "w":
+	        	  levelElements.add(new Wall(v[0],v[1],v[2],v[3]));
 	        	  break;
 	          }
 	        }
@@ -71,19 +74,22 @@ public class Puzzle extends Application {
 		private GraphicsContext gc = getGraphicsContext2D();
 
 		public LoadLevel() {
-			setWidth(MAX_WIDTH);
-			setHeight(MAX_HEIGHT);
+			setWidth(PuzzleUtil.MAX_WIDTH);
+			setHeight(PuzzleUtil.MAX_HEIGHT);
 			draw(gc);
 		}
 
 		public void draw(GraphicsContext gc) {
 			gc.setFill(Color.BLACK);
-			gc.fillRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
+			gc.fillRect(0, 0, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 
 			// render each element in the level
 			for (Element e : levelElements) {
 				e.draw(gc);
 			}
+			
+			//render the player
+			zack.draw(gc);
 		}
-	}
+	}	 
 }
