@@ -15,4 +15,5 @@ abstract class Element
 	}
 	
 	public abstract void draw(GraphicsContext gc);
+	public void update(long millis) {};
 }
