@@ -72,6 +72,10 @@ public class Puzzle extends Application {
 	        	  break;
 	          case "j":
 	        	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
+	        	  break;
+	          case "a":
+	        	  levelElements.add(new Arrows(v[0], v[1], v[2], v[3]));
+	        	  break;
 	          }
 	        }
 	        scan.close();
