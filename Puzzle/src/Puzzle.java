@@ -70,6 +70,8 @@ public class Puzzle extends Application {
 	          case "w":
 	        	  levelElements.add(new Wall(v[0], v[1], v[2], v[3]));
 	        	  break;
+	          case "j":
+	        	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
 	          }
 	        }
 	        scan.close();
@@ -107,9 +109,6 @@ public class Puzzle extends Application {
 			
 			//render the player
 			zack.draw(gc);
-			
-			//render jukebox
-			jb.draw(gc);
 		}
 	}	 
 	
