@@ -10,6 +10,8 @@ class PuzzleUtil{
 	public static final String LEVEL_PATH = PATH+"/src/levels/";
 	public static final int ZACK_WIDTH = 66;
 	public static final int ZACK_HEIGHT = 100;
+	public static final int JUKEBOX_WIDTH = 70;
+	public static final int JUKEBOX_HEIGHT = 100; //may not be actually a constant since height changes
 	public static final long NANO_IN_SEC = 1000000000;
 	
 	public enum Dir {DOWN, UP, LEFT, RIGHT;

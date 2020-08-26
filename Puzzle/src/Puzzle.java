@@ -24,6 +24,7 @@ public class Puzzle extends Application {
 	private LoadLevel levelCanvas;
 	private ArrayList<Element> levelElements = new ArrayList<Element>();
 	private Player zack = new Player();
+	private Jukebox jb = new Jukebox();
 	
 	public static void main(String args[]) {
 		Application.launch(args);
@@ -106,6 +107,9 @@ public class Puzzle extends Application {
 			
 			//render the player
 			zack.draw(gc);
+			
+			//render jukebox
+			jb.draw(gc);
 		}
 	}	 
 	
