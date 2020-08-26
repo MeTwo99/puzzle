@@ -26,7 +26,7 @@ public class Puzzle extends Application {
 	private LoadLevel levelCanvas;
 	private ArrayList<Element> levelElements = new ArrayList<Element>();
 	private Player zack = new Player();
-	private Jukebox jb = new Jukebox();
+	private Stage applicationStage;
 	
 	public static void main(String args[]) {
 		Application.launch(args);
@@ -34,58 +34,51 @@ public class Puzzle extends Application {
 	
 	//MAIN MENU	
 	public void start(Stage stage) {
+		applicationStage = stage;
+		//make the image	
+		Image themenu = new Image(PuzzleUtil.FILE_PATH_RES+"puzzle_title.png", false);	
+			
+		//make it into a bg image
+		BackgroundImage myImage = new BackgroundImage(themenu, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 		
-	//make the image	
-	Image themenu = new Image(PuzzleUtil.FILE_PATH_RES+"puzzle_title.png", false);	
+		//buttons
+		Button start = new Button("Start");
+		start.setPrefSize(260, 90);
 		
-	//make it into a bg image
-	BackgroundImage myImage = new BackgroundImage(themenu, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+		Button load = new Button("Load Game");
+		load.setPrefSize(260, 90);
+		
+		//box for buttons to put at the bottom of bp
+		HBox myButtons = new HBox();
+		myButtons.getChildren().add(start);
+		myButtons.getChildren().add(load);
+		myButtons.setAlignment(Pos.CENTER);
+		
+		//border pane holds everything
+		BorderPane bp = new BorderPane();
+		bp.setBackground(new Background(myImage));
+		bp.setPrefSize(1000, 1000);
+		bp.setBottom(myButtons);
+		//lift the buttons off the ground
+		bp.setPadding(new Insets(0, 00, 100, 0));
+		
+		//make buttons work
+	    start.setOnAction(new startHandler());
 	
-
-	//buttons
-	Button start = new Button("Start");
-	start.setPrefSize(260, 90);
-	
-	Button load = new Button("Load Game");
-	load.setPrefSize(260, 90);
-	
-	//box for buttons to put at the bottom of bp
-	HBox myButtons = new HBox();
-	myButtons.getChildren().add(start);
-	myButtons.getChildren().add(load);
-	myButtons.setAlignment(Pos.CENTER);
-	
-	//border pane holds everything
-	BorderPane bp = new BorderPane();
-	bp.setBackground(new Background(myImage));
-	bp.setPrefSize(1000, 1000);
-	bp.setBottom(myButtons);
-	//lift the buttons off the ground
-	bp.setPadding(new Insets(0, 00, 100, 0));
-	
-	//make buttons work
-    start.setOnAction(new startHandler());
-
-	
-	//turn it on         
-	Scene scene = new Scene(bp);
-	stage.setScene(scene);
-	stage.show();
+		//turn it on         
+		Scene scene = new Scene(bp);
+		stage.setScene(scene);
+		stage.show();
 	}
 	
 	
 	 public class startHandler implements EventHandler<ActionEvent>{
 	      public void handle (ActionEvent e){
-	      
-	    	  
-	    		//START PRESSED
-	    	  
+	    	  startGame(applicationStage);    	  
 	      }
 	 }
-
 	
-	/*
-	public void start(Stage stage) {
+	public void startGame(Stage stage){
 		FlowPane fp = new FlowPane();
 		fp.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -93,11 +86,8 @@ public class Puzzle extends Application {
 		levelCanvas = new LoadLevel();
 		fp.getChildren().add(levelCanvas);
 
-		
 		AnimationTimer ta = new GameTimer();
 		ta.start();
-		
-
 		
 		Scene scene = new Scene(fp, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 		scene.setOnKeyPressed(new KeyListenerDown(zack));
@@ -105,7 +95,7 @@ public class Puzzle extends Application {
 		stage.setTitle("Puzzle");
 		stage.show();
 	}
-*/
+
 	private void createLevelElements(String levelName) {
 		try {
 			levelElements.clear();
