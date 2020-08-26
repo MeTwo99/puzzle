@@ -6,6 +6,7 @@ public class Jukebox extends Element {
 	
 	private final static Image JUKEBOX = new Image(PuzzleUtil.FILE_PATH_RES+"jukeboxes.png", false);
 	private int playerWalkCycle = 0, playerDir = 0;
+	//test upload
 	
 	public Jukebox() {
 		this(635, 450, PuzzleUtil.JUKEBOX_WIDTH, PuzzleUtil.JUKEBOX_HEIGHT);
