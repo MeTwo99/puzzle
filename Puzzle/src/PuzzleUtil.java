@@ -14,7 +14,7 @@ class PuzzleUtil{
 	public static final int JUKEBOX_HEIGHT = 100;
 	public static final long NANO_IN_SEC = 1000000000;
 	
-	public enum Dir {DOWN, UP, LEFT, RIGHT;
+	public enum Dir {DOWN, UP, LEFT, RIGHT, NONE;
 	    public static int toInt(Dir d) {
 	        switch (d) {
 	            case DOWN:
@@ -27,6 +27,19 @@ class PuzzleUtil{
 	            	return 3;
 	        }
 	        return -1;
+	    }
+	    public static Dir toDir(int i) {
+	        switch (i) {
+	            case 0:
+	            	return DOWN;
+	            case 1:
+	            	return UP;
+	            case 2:
+	                return LEFT;           
+	            case 3:
+	            	return RIGHT;
+	        }
+	        return NONE;
 	    }
     }
 	

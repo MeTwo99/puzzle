@@ -91,6 +91,7 @@ public class Puzzle extends Application {
 		
 		Scene scene = new Scene(fp, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 		scene.setOnKeyPressed(new KeyListenerDown(zack));
+		scene.setOnKeyReleased(new KeyListenerUp(zack));
 		stage.setScene(scene);
 		stage.setTitle("Puzzle");
 		stage.show();
@@ -104,8 +105,9 @@ public class Puzzle extends Application {
 	          String l = scan.nextLine();
 	          String[] data = l.split(",");
 	          
-	          int[] v = new int[data.length-1];
-	          for(int i = 1; i < data.length; i++)
+	          //the x,y,w,h
+	          int[] v = new int[4];
+	          for(int i = 1; i < 5; i++)
 	        	  v[i-1] = Integer.parseInt(data[i]); 
 	          
 	          switch(data[0]) {
@@ -119,7 +121,8 @@ public class Puzzle extends Application {
 	        	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
 	        	  break;
 	          case "a":
-	        	  levelElements.add(new Arrows(v[0], v[1], v[2], v[3]));
+	        	  PuzzleUtil.Dir dir = PuzzleUtil.Dir.toDir(Integer.parseInt(data[5]));
+	        	  levelElements.add(new Arrow(v[0], v[1], v[2], v[3], dir));
 	        	  break;
 	          }
 	        }
@@ -203,6 +206,24 @@ public class Puzzle extends Application {
 				p.setDirection(PuzzleUtil.Dir.LEFT);
 			if(event.getCode() == KeyCode.RIGHT) 
 				p.setDirection(PuzzleUtil.Dir.RIGHT);
+		}
+	}
+	public class KeyListenerUp implements EventHandler<KeyEvent> {
+		private Player p;
+		public KeyListenerUp(Player p) {
+			this.p = p;
+		}
+		
+		public void handle(KeyEvent event) {
+			PuzzleUtil.Dir d = p.getDir(); 
+			if(event.getCode() == KeyCode.UP && d == PuzzleUtil.Dir.UP) 
+				p.setWalking(false);
+			if(event.getCode() == KeyCode.DOWN && d == PuzzleUtil.Dir.DOWN)
+				p.setWalking(false);
+			if(event.getCode() == KeyCode.LEFT && d == PuzzleUtil.Dir.LEFT) 
+				p.setWalking(false);
+			if(event.getCode() == KeyCode.RIGHT && d == PuzzleUtil.Dir.RIGHT)
+				p.setWalking(false);
 		}
 	}
 }
