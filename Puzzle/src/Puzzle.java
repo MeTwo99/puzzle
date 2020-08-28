@@ -117,10 +117,10 @@ public class Puzzle extends Application {
 	          
 	          switch(data[0]) {
 	          case "t":
-	        	  levelElements.add(new Tile(v[0], v[1], v[2], v[3]));
+	        	  levelElements.add(new Tile(v[0], v[1], v[2], v[3], PuzzleUtil.TEXTURES.get(data[5])));//, data[5]));
 	        	  break;
 	          case "w":
-	        	  levelElements.add(new Wall(v[0], v[1], v[2], v[3]));
+	        	  levelElements.add(new Wall(v[0], v[1], v[2], v[3], PuzzleUtil.TEXTURES.get(data[5])));//, data[5]));
 	        	  break;
 	          case "j":
 	        	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
@@ -198,10 +198,10 @@ public class Puzzle extends Application {
 				e.update(millis);
 			}
 			zack.update(millis);
-			
+			Element zackHitbox = new Tile(zack.getX()+10, zack.getY()+50, zack.getW()-20, zack.getH()-60, null);
 			//check collisions
 			for (Element e : levelElements) {
-				if (PuzzleUtil.isCollision(zack, e)) {
+				if (PuzzleUtil.isCollision(zackHitbox, e)) {
 					e.onCollision();
 					if (e instanceof Wall)
 						zack.goTo(tempX, tempY);

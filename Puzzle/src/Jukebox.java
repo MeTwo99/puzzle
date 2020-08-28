@@ -16,9 +16,6 @@ public class Jukebox extends Wall {
 	
 	@Override
 	public void draw(GraphicsContext gc) {
-		gc.setFill(Color.TRANSPARENT);
-		gc.fillRect(x, y, w, h);
-
 		//600 vertical, 400 horizontal
 		int sx = jukeboxBounceCycle*400;
 		int sy = jukeboxDir*600;

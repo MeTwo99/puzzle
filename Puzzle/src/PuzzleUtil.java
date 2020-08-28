@@ -1,3 +1,4 @@
+import java.util.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -14,7 +15,19 @@ class PuzzleUtil{
 	public static final int JUKEBOX_HEIGHT = 100;
 	public static final long NANO_IN_SEC = 1000000000;
 	
+	//images
+	public static final Map<String, Image> TEXTURES = new HashMap<String, Image>(); 
+	static {
+		TEXTURES.put("checker", new Image(FILE_PATH_RES+"checker.jpg", false));
+		TEXTURES.put("gray", new Image(FILE_PATH_RES+"gray.jpg", false));
+		TEXTURES.put("brick", new Image(FILE_PATH_RES+"wall.jpg", false));
+		TEXTURES.put("none", null);
+	}
+	
 	public static void repeatImage(GraphicsContext gc, Image i, int x, int y, int w, int h) {
+		if (i == null || gc == null)
+			return;
+		
 		double iw = i.getWidth();
 		int rows = (int)Math.floor(w/iw);
 		double remainderWidth = w - (rows*iw);
