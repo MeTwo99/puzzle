@@ -14,6 +14,20 @@ abstract class Element
 		this.h = h;
 	}
 	
+	public int getX() {
+		return x;
+	}
+	public int getY() {
+		return y;
+	}
+	public int getW() {
+		return w;
+	}
+	public int getH() {
+		return h;
+	}
+	
 	public abstract void draw(GraphicsContext gc);
-	public void update(long millis) {};
+	public void update(long millis) {}
+	public void onCollision() {};
 }

@@ -2,7 +2,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class Jukebox extends Element {
+public class Jukebox extends Wall {
 	
 	private final static Image JUKEBOX = new Image(PuzzleUtil.FILE_PATH_RES+"jukeboxes.png", false);
 	private int jukeboxBounceCycle = 1, jukeboxDir = 0, bounceFrames = 0;

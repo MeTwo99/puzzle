@@ -14,35 +14,6 @@ class PuzzleUtil{
 	public static final int JUKEBOX_HEIGHT = 100;
 	public static final long NANO_IN_SEC = 1000000000;
 	
-	public enum Dir {DOWN, UP, LEFT, RIGHT, NONE;
-	    public static int toInt(Dir d) {
-	        switch (d) {
-	            case DOWN:
-	            	return 0;
-	            case UP:
-	            	return 1;
-	            case LEFT:
-	                return 2;           
-	            case RIGHT:
-	            	return 3;
-	        }
-	        return -1;
-	    }
-	    public static Dir toDir(int i) {
-	        switch (i) {
-	            case 0:
-	            	return DOWN;
-	            case 1:
-	            	return UP;
-	            case 2:
-	                return LEFT;           
-	            case 3:
-	            	return RIGHT;
-	        }
-	        return NONE;
-	    }
-    }
-	
 	public static void repeatImage(GraphicsContext gc, Image i, int x, int y, int w, int h) {
 		double iw = i.getWidth();
 		int rows = (int)Math.floor(w/iw);
@@ -62,4 +33,12 @@ class PuzzleUtil{
 		}
 		gc.drawImage(i, x+rows*iw, y+cols*ih, remainderWidth, remainderHeight);
 	}
+	
+	
+	public static boolean isCollision(Element e1, Element e2) {
+		return isCollision(e1.getX(), e1.getY(), e1.getW(), e1.getH(), e2.getX(), e2.getY(), e2.getW(), e2.getH());
+	} 
+	public static boolean isCollision(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {		
+		return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
+	} 
 }

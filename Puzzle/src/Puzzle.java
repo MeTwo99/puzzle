@@ -27,6 +27,8 @@ public class Puzzle extends Application {
 	private ArrayList<Element> levelElements = new ArrayList<Element>();
 	private Player zack = new Player();
 	private Stage applicationStage;
+	int fadeValue;
+	int fadeDirection;
 	
 	public static void main(String args[]) {
 		Application.launch(args);
@@ -99,6 +101,9 @@ public class Puzzle extends Application {
 
 	private void createLevelElements(String levelName) {
 		try {
+			fadeValue = 100;
+			fadeDirection = -1;
+			
 			levelElements.clear();
 	        Scanner scan = new Scanner(new File(PuzzleUtil.LEVEL_PATH+levelName));
 	        while (scan.hasNextLine()) {
@@ -121,7 +126,7 @@ public class Puzzle extends Application {
 	        	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
 	        	  break;
 	          case "a":
-	        	  PuzzleUtil.Dir dir = PuzzleUtil.Dir.toDir(Integer.parseInt(data[5]));
+	        	  Dir dir = new Dir(Integer.parseInt(data[5]));
 	        	  levelElements.add(new Arrow(v[0], v[1], v[2], v[3], dir));
 	        	  break;
 	          }
@@ -139,10 +144,6 @@ public class Puzzle extends Application {
 		public LoadLevel() {
 			setWidth(PuzzleUtil.MAX_WIDTH);
 			setHeight(PuzzleUtil.MAX_HEIGHT);
-			
-			//this.setOnKeyPressed(new KeyListenerDown(zack));
-			//this.setOnKeyReleased(new KeyListenerUp());
-			
 			draw(gc);
 		}
 		
@@ -161,6 +162,13 @@ public class Puzzle extends Application {
 			
 			//render the player
 			zack.draw(gc);
+			
+			//fade screen
+			if((fadeValue > 0 && fadeDirection == -1) || (fadeValue < 100 && fadeDirection == 1)) {
+				fadeValue += fadeDirection;
+				gc.setFill(new Color(0,0,0,(double)fadeValue/100));
+				gc.fillRect(0, 0, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
+			}
 		}
 	}	 
 	
@@ -169,8 +177,9 @@ public class Puzzle extends Application {
 		long sec = 0;
 		int frame = 0;
 		
+		
+		
 		@Override
-		//every frame, do this (60 FPS)
 		public void handle(long millis) {
 			sec += (millis - prevTime);
 			frame += 1;
@@ -180,13 +189,26 @@ public class Puzzle extends Application {
 				frame = 0;
 			}
 			prevTime = millis;
+			//every frame, do this (60 FPS)
 			
+			int tempX = zack.getX(), tempY = zack.getY();
+			
+			//update all data
 			for (Element e : levelElements) {
 				e.update(millis);
 			}
-			
 			zack.update(millis);
 			
+			//check collisions
+			for (Element e : levelElements) {
+				if (PuzzleUtil.isCollision(zack, e)) {
+					e.onCollision();
+					if (e instanceof Wall)
+						zack.goTo(tempX, tempY);
+				}
+			}
+			
+			//draw the level
 			levelCanvas.draw();
 		}
 	}
@@ -199,13 +221,13 @@ public class Puzzle extends Application {
 		
 		public void handle(KeyEvent event) {
 			if(event.getCode() == KeyCode.UP) 
-				p.setDirection(PuzzleUtil.Dir.UP);
+				p.setDirection(Dir.UP);
 			if(event.getCode() == KeyCode.DOWN) 
-				p.setDirection(PuzzleUtil.Dir.DOWN);
+				p.setDirection(Dir.DOWN);
 			if(event.getCode() == KeyCode.LEFT) 
-				p.setDirection(PuzzleUtil.Dir.LEFT);
+				p.setDirection(Dir.LEFT);
 			if(event.getCode() == KeyCode.RIGHT) 
-				p.setDirection(PuzzleUtil.Dir.RIGHT);
+				p.setDirection(Dir.RIGHT);
 		}
 	}
 	public class KeyListenerUp implements EventHandler<KeyEvent> {
@@ -215,14 +237,14 @@ public class Puzzle extends Application {
 		}
 		
 		public void handle(KeyEvent event) {
-			PuzzleUtil.Dir d = p.getDir(); 
-			if(event.getCode() == KeyCode.UP && d == PuzzleUtil.Dir.UP) 
+			Dir d = p.getDir(); 
+			if(event.getCode() == KeyCode.UP && d == Dir.UP) 
 				p.setWalking(false);
-			if(event.getCode() == KeyCode.DOWN && d == PuzzleUtil.Dir.DOWN)
+			if(event.getCode() == KeyCode.DOWN && d == Dir.DOWN)
 				p.setWalking(false);
-			if(event.getCode() == KeyCode.LEFT && d == PuzzleUtil.Dir.LEFT) 
+			if(event.getCode() == KeyCode.LEFT && d == Dir.LEFT) 
 				p.setWalking(false);
-			if(event.getCode() == KeyCode.RIGHT && d == PuzzleUtil.Dir.RIGHT)
+			if(event.getCode() == KeyCode.RIGHT && d == Dir.RIGHT)
 				p.setWalking(false);
 		}
 	}
