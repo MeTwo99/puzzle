@@ -4,3 +4,5 @@ bin/
 .DS_Store
 #do not include temp files
 *~
+#do not include save files
+saves/

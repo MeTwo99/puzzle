@@ -19,16 +19,20 @@ import javafx.scene.layout.BackgroundImage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Puzzle extends Application {
 	
 	private LoadLevel levelCanvas;
-	private ArrayList<Element> levelElements = new ArrayList<Element>();
+	private List<Element> levelElements = new ArrayList<Element>();
 	private Player zack = new Player();
 	private Stage applicationStage;
-	int fadeValue;
-	int fadeDirection;
+	private String currentLevel;
+	private AnimationTimer ta = new GameTimer();
+	private int fadeValue, fadeDirection, destinationX, destinationY;
+	private String changingLevel = null;
+	
 	
 	public static void main(String args[]) {
 		Application.launch(args);
@@ -76,20 +80,25 @@ public class Puzzle extends Application {
 	
 	 public class startHandler implements EventHandler<ActionEvent>{
 	      public void handle (ActionEvent e){
-	    	  startGame(applicationStage);    	  
+	    	  startGameButton(applicationStage);    	  
 	      }
 	 }
 	
-	public void startGame(Stage stage){
+	public void startGameButton(Stage stage){
+		//delete all the save files
+		File saves[] = new File(PuzzleUtil.SAVE_PATH).listFiles();
+		for (File f : saves) {
+			f.delete();
+		}
+		
 		FlowPane fp = new FlowPane();
 		fp.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
-		createLevelElements("level2");
+		ta.start();
+		
+		saveAndLoadNextLevel("level1");
 		levelCanvas = new LoadLevel();
 		fp.getChildren().add(levelCanvas);
-
-		AnimationTimer ta = new GameTimer();
-		ta.start();
 		
 		Scene scene = new Scene(fp, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 		scene.setOnKeyPressed(new KeyListenerDown(zack));
@@ -99,51 +108,71 @@ public class Puzzle extends Application {
 		stage.show();
 	}
 
-	private void createLevelElements(String levelName) {
+	public void saveAndLoadNextLevel(String levelName) {
 		try {
-			fadeValue = 100;
-			fadeDirection = -1;
-			String color;
+			//save the current level to save file
+			if(currentLevel != null) {
+				PrintWriter pw = new PrintWriter(new File(PuzzleUtil.SAVE_PATH+currentLevel+".save"));
+				for(Element e : levelElements) {
+					pw.println(e.toString());			
+				}
+				pw.close();
+			}
 			
-			levelElements.clear();
-	        Scanner scan = new Scanner(new File(PuzzleUtil.LEVEL_PATH+levelName));
-	        while (scan.hasNextLine()) {
-	          String l = scan.nextLine();
-	          String[] data = l.split(",");
-	          
-	          //the x,y,w,h
-	          int[] v = new int[4];
-	          for(int i = 1; i < 5; i++)
-	        	  v[i-1] = Integer.parseInt(data[i]); 
-	          
-	          switch(data[0]) {
-	          case "t":
-	        	  levelElements.add(new Tile(v[0], v[1], v[2], v[3], PuzzleUtil.TEXTURES.get(data[5])));//, data[5]));
-	        	  break;
-	          case "w":
-	        	  levelElements.add(new Wall(v[0], v[1], v[2], v[3], PuzzleUtil.TEXTURES.get(data[5])));//, data[5]));
-	        	  break;
-	          case "j":
-	        	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
-	        	  break;
-	          case "a":
-	        	  Dir dir = new Dir(Integer.parseInt(data[5]));
-	        	  levelElements.add(new Arrow(v[0], v[1], v[2], v[3], dir));
-	        	  break;
-	          case "sp":
-	        	  levelElements.add(new squarePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
-	        	  break;
-	          case "cp":
-	        	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
-	        	  break;
-	    
-	          }
-	        }
-	        scan.close();
-	      } catch (FileNotFoundException e) {
+			//if saved, load the saved level
+			File saveFile = new File(PuzzleUtil.SAVE_PATH+levelName+".save");
+			if (saveFile.exists())
+				createLevelElements(saveFile);
+			else //if no save, load the level file
+				createLevelElements(new File(PuzzleUtil.LEVEL_PATH+levelName));
+			
+			currentLevel = levelName;
+				
+		} catch (FileNotFoundException fnfe) {
 	        System.out.println("An error occurred.");
-	        e.printStackTrace();
-	      }
+	        fnfe.printStackTrace();
+	    }
+	}
+
+	private void createLevelElements(File levelFile) throws FileNotFoundException {
+		fadeValue = 100;
+		fadeDirection = -1;
+		
+		levelElements.clear();
+        Scanner scan = new Scanner(levelFile);
+        while (scan.hasNextLine()) {
+          String l = scan.nextLine();
+          String[] data = l.split(",");
+          
+          //the x,y,w,h
+          int[] v = new int[4];
+          for(int i = 0; i < 4; i++)
+        	  v[i] = Integer.parseInt(data[i+1]); 
+          
+          switch(data[0]) {
+          case "t":
+        	  levelElements.add(new Tile(v[0], v[1], v[2], v[3], PuzzleUtil.TEXTURES.get(data[5])));
+        	  break;
+          case "w":
+        	  levelElements.add(new Wall(v[0], v[1], v[2], v[3], PuzzleUtil.TEXTURES.get(data[5])));
+        	  break;
+          case "j":
+        	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
+        	  break;
+          case "a":
+        	  Dir dir = new Dir(Integer.parseInt(data[5]));
+        	  int dx = Integer.parseInt(data[7]), dy = Integer.parseInt(data[8]);
+        	  levelElements.add(new Arrow(v[0], v[1], v[2], v[3], dir, data[6], dx, dy, this));
+        	  break;
+          case "sp":
+        	  levelElements.add(new squarePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
+        	  break;
+          case "cp":
+        	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
+        	  break;
+          }
+        }
+        scan.close();
 	}
 
 	public class LoadLevel extends Canvas {
@@ -154,11 +183,9 @@ public class Puzzle extends Application {
 			setHeight(PuzzleUtil.MAX_HEIGHT);
 			draw(gc);
 		}
-		
 		public void draw() {
 			this.draw(gc);
 		}
-
 		public void draw(GraphicsContext gc) {
 			gc.setFill(Color.BLACK);
 			gc.fillRect(0, 0, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
@@ -185,8 +212,6 @@ public class Puzzle extends Application {
 		long sec = 0;
 		int frame = 0;
 		
-		
-		
 		@Override
 		public void handle(long millis) {
 			sec += (millis - prevTime);
@@ -205,12 +230,20 @@ public class Puzzle extends Application {
 			for (Element e : levelElements) {
 				e.update(millis);
 			}
-			zack.update(millis);
+			if( fadeValue == 100 ) {
+				fadeDirection = -1;
+				saveAndLoadNextLevel(changingLevel);
+				changingLevel = null;
+				zack.goTo(destinationX, destinationY);
+			}
+			else if (changingLevel == null)
+				zack.update(millis);
+			
 			Element zackHitbox = new Tile(zack.getX()+10, zack.getY()+50, zack.getW()-20, zack.getH()-60, null);
 			//check collisions
 			for (Element e : levelElements) {
 				if (PuzzleUtil.isCollision(zackHitbox, e)) {
-					e.onCollision();
+					e.onCollision(PuzzleUtil.isOn(zackHitbox,e));
 					if (e instanceof Wall)
 						zack.goTo(tempX, tempY);
 				}
@@ -219,6 +252,13 @@ public class Puzzle extends Application {
 			//draw the level
 			levelCanvas.draw();
 		}
+	}
+	
+	public void setLevelDestination(String levelName, int x, int y) {
+		changingLevel = levelName;
+		fadeDirection = 1;
+		destinationX = x;
+		destinationY = y;
 	}
 	
 	public class KeyListenerDown implements EventHandler<KeyEvent> {
