@@ -19,6 +19,7 @@ import javafx.scene.layout.BackgroundImage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
@@ -86,10 +87,15 @@ public class Puzzle extends Application {
 	
 	public void startGameButton(Stage stage){
 		//delete all the save files
-		File saves[] = new File(PuzzleUtil.SAVE_PATH).listFiles();
-		for (File f : saves) {
-			f.delete();
-		}
+		File saveDir = new File(PuzzleUtil.SAVE_PATH);
+		if (saveDir.exists()) {
+			File saves[] = saveDir.listFiles();
+			for (File f : saves) {
+				f.delete();
+			}
+		} else 
+			saveDir.mkdir();
+
 		
 		FlowPane fp = new FlowPane();
 		fp.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
