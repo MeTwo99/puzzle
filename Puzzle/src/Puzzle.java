@@ -84,7 +84,7 @@ public class Puzzle extends Application {
 		FlowPane fp = new FlowPane();
 		fp.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
-		createLevelElements("level1");
+		createLevelElements("level2");
 		levelCanvas = new LoadLevel();
 		fp.getChildren().add(levelCanvas);
 
@@ -103,6 +103,7 @@ public class Puzzle extends Application {
 		try {
 			fadeValue = 100;
 			fadeDirection = -1;
+			String color;
 			
 			levelElements.clear();
 	        Scanner scan = new Scanner(new File(PuzzleUtil.LEVEL_PATH+levelName));
@@ -129,6 +130,13 @@ public class Puzzle extends Application {
 	        	  Dir dir = new Dir(Integer.parseInt(data[5]));
 	        	  levelElements.add(new Arrow(v[0], v[1], v[2], v[3], dir));
 	        	  break;
+	          case "sp":
+	        	  levelElements.add(new squarePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
+	        	  break;
+	          case "cp":
+	        	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
+	        	  break;
+	    
 	          }
 	        }
 	        scan.close();
