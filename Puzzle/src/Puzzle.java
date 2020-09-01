@@ -87,6 +87,7 @@ public class Puzzle extends Application {
 	
 	public void startGameButton(Stage stage){
 		//delete all the save files
+
 		File saveDir = new File(PuzzleUtil.SAVE_PATH);
 		if (saveDir.exists()) {
 			File saves[] = saveDir.listFiles();
@@ -95,6 +96,12 @@ public class Puzzle extends Application {
 			}
 		} else 
 			saveDir.mkdir();
+
+
+		/*File saves[] = new File(PuzzleUtil.SAVE_PATH).listFiles();
+		for (File f : saves) {
+			f.delete();
+		}*/
 
 		
 		FlowPane fp = new FlowPane();
