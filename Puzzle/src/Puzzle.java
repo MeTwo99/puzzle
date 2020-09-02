@@ -183,6 +183,9 @@ public class Puzzle extends Application {
           case "cp":
         	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
         	  break;
+          case "spike":
+        	  levelElements.add(new Spike(v[0], v[1], v[2], v[3]));//gotta do color and direction
+        	  break;
           }
         }
         scan.close();
