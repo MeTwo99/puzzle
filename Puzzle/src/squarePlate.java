@@ -3,41 +3,60 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class squarePlate extends Element{
-
-	private final static Image pSPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"purple_square_plate.png", false);
-	private final static Image bSPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"blue_square_plate.png", false);
-	private final static Image oSPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"orange_square_plate.png", false);
-	private final static Image ySPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"yellow_square_plate.png", false);
 	
-	private int color;
+	private final static Image SPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"square_plates.png", false);
+private int spikeCycle = 0, spikeDir = 0, bounceFrames = 0;
 	
-	public squarePlate(int x, int y, int w, int h, int c) {
-		super(x,y,w,h);
-		color = c;
-		
+	public squarePlate() {
+		this(0, 0, PuzzleUtil.SPLATE_WIDTH, PuzzleUtil.SPLATE_HEIGHT,"test");
+	}
+	public squarePlate(int x, int y, int w, int h, String c) {
+		super(x,y,w,h,c);
 	}
 	
 	@Override
 	public void draw(GraphicsContext gc) {
+		//600 vertical, 400 horizontal
+		int sx = 0;//spikeCycle*400;
+		int sy = 0;//spikeDir*600;
 		
-		switch(color) {
-        //to draw purple plate
-		case 0:
-        	gc.drawImage(pSPLATE, x, y, 100, 100, x, y, w, h);
+		switch(c) {
+        //blue
+		case "blue":
+        	sx = 0;
+        	sy = 0;
+      	  break; 
+      	//orange
+        case "orange":
+        	sx = 0;
+        	sy = 251;
       	  break;
-      	//to draw blue plate
-        case 1:
-        	gc.drawImage(bSPLATE, x, y, 100, 100, x, y, w, h);
+      	//purple
+        case "purple":
+        	sx = 0;
+        	sy = 502;
       	  break;
-      	//to draw orange plate
-        case 2:
-        	gc.drawImage(oSPLATE, x, y, 100, 100, x, y, w, h);
+      	//yellow
+        case "yellow":
+        	sx = 0;
+        	sy = 753;
       	  break;
-      	//to draw yellow plate
-        case 3:
-        	gc.drawImage(ySPLATE, x, y, 100, 100, x, y, w, h);
-      	  break;
-       
+		}
+
+		
+		gc.drawImage(SPLATE, sx, sy, 100, 100, x, y, w, h);
+	}
+	@Override
+	//every frame, do this
+	public void update(long millis) {
+		//advanceCycle(millis); //advance when button pushed
+	}
+	
+	private void advanceCycle(long millis) {
+		bounceFrames += 1;
+		if (bounceFrames > 20) {
+			bounceFrames = 0;
+			spikeCycle = (spikeCycle == 3 ? 0 : spikeCycle + 1);
 		}
 	}
 }

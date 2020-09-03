@@ -7,7 +7,28 @@ abstract class Element
 	protected int y;
 	protected int w;
 	protected int h;
+	protected String c;
+	protected char orientation;
+	protected int status;
 	protected Image i;
+	
+	public Element (int x, int y, int w, int h, String c, char orientation, int status) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.c = c;
+		this.orientation = orientation;
+		this.status = status;
+	}
+	
+	public Element (int x, int y, int w, int h, String c) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.c = c;
+	}
 	
 	public Element(int x, int y, int w, int h, Image i) {
 		this.x = x;
