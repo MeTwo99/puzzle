@@ -184,8 +184,10 @@ public class Puzzle extends Application {
         	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
         	  break;
           case "spike":
-        	  levelElements.add(new Spike(v[0], v[1], v[2], v[3], data[5], data[6].charAt(0), Integer.parseInt(data[7])));//gotta do color and direction
+        	  levelElements.add(new Spike(v[0], v[1], v[2], v[3], data[5], data[6].charAt(0), Integer.parseInt(data[7])));
         	  break;
+          case "launchpad":
+        	  levelElements.add(new Launchpad(v[0], v[1], v[2], v[3], data[5], data[6].charAt(0), Integer.parseInt(data[7])));
           }
         }
         scan.close();

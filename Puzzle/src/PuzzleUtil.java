@@ -18,6 +18,8 @@ class PuzzleUtil{
 	public static final int SPIKE_HEIGHT = 50;
 	public static final int SPLATE_WIDTH = 100;
 	public static final int SPLATE_HEIGHT = 100;
+	public static final int LAUNCHPAD_WIDTH = 100;
+	public static final int LAUNCHPAD_HEIGHT = 100;
 	public static final long NANO_IN_SEC = 1000000000;
 
 	

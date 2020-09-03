@@ -27,3 +27,5 @@ spike,300,425,110,50,blue,h,0
 spike,550,190,40,110,blue,v,0
 spike,400,190,40,110,blue,v,1
 spike,300,455,110,50,orange,h,0
+launchpad,500,700,100,100,none,l,0
+launchpad,400,700,100,100,none,r,0
