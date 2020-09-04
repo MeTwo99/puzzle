@@ -19,7 +19,6 @@ class Dir {
 	      	break; 
 		}
 	}
-	
 	public int getInt() {
 		return d;
 	}

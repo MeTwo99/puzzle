@@ -33,6 +33,7 @@ public class Puzzle extends Application {
 	private AnimationTimer ta = new GameTimer();
 	private int fadeValue, fadeDirection, destinationX, destinationY;
 	private String changingLevel = null;
+	private boolean isCollision;
 	
 	
 	public static void main(String args[]) {
@@ -155,9 +156,11 @@ public class Puzzle extends Application {
         Scanner scan = new Scanner(levelFile);
         while (scan.hasNextLine()) {
           String l = scan.nextLine();
+          if(l.equals("") || l.substring(0, 2).equals("//"))
+            	continue;
           String[] data = l.split(",");
           
-          //the x,y,w,h
+          //the x,y,w,h common to all elements
           int[] v = new int[4];
           for(int i = 0; i < 4; i++)
         	  v[i] = Integer.parseInt(data[i+1]); 
@@ -188,11 +191,11 @@ public class Puzzle extends Application {
         	  break;
           case "spike":
         	  color = new Col(data[5]);
-        	  levelElements.add(new Spike(v[0], v[1], v[2], v[3], color, data[6].charAt(0), Integer.parseInt(data[7])));
+        	  levelElements.add(new Spike(v[0], v[1], v[2], v[3], color, data[6].charAt(0), Integer.parseInt(data[7]), this));
         	  break;
           case "launchpad":
         	  dir = new Dir(data[5]);
-        	  levelElements.add(new Launchpad(v[0], v[1], v[2], v[3], dir, Integer.parseInt(data[6])));
+        	  levelElements.add(new Launchpad(v[0], v[1], v[2], v[3], dir, Integer.parseInt(data[6]), this));
           }
         }
         scan.close();
@@ -262,28 +265,37 @@ public class Puzzle extends Application {
 			else if (changingLevel == null)
 				zack.update(millis);
 			
+			isCollision = false;
 			Element zackHitbox = new Tile(zack.getX()+10, zack.getY()+50, zack.getW()-20, zack.getH()-60, null);
 			//check collisions
 			for (Element e : levelElements) {
 				if (PuzzleUtil.isCollision(zackHitbox, e)) {
 					e.onCollision(PuzzleUtil.isOn(zackHitbox,e));
 					if (e instanceof Wall)
-						zack.goTo(tempX, tempY);
+						isCollision = true; 
 				}
 			}
+			//if there was an object in the way
+			if(isCollision)
+				zack.goTo(tempX, tempY);
 			
 			//draw the level
 			levelCanvas.draw();
 		}
 	}
 	
+	//controls
 	public void setLevelDestination(String levelName, int x, int y) {
 		changingLevel = levelName;
 		fadeDirection = 1;
 		destinationX = x;
 		destinationY = y;
 	}
+	public void stopPlayer() {
+		isCollision = true;
+	}
 	
+	//key inputs
 	public class KeyListenerDown implements EventHandler<KeyEvent> {
 		private Player p;
 		public KeyListenerDown(Player p) {

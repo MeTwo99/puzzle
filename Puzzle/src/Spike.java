@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 public class Spike extends Element {
 	
@@ -8,16 +9,21 @@ public class Spike extends Element {
 	private int status;
 	private char orientation;
 	private Col color;
+	private Puzzle puzzle;
 	
-	public Spike(int x, int y, int w, int h, Col c, char orientation, int status) {
+	public Spike(int x, int y, int w, int h, Col c, char orientation, int status, Puzzle p) {
 		super(x,y,w,h);
 		color = c;
 		this.orientation = orientation;
 		this.status = status;
+		puzzle = p;
 	}
 	
 	@Override
 	public void draw(GraphicsContext gc) {
+		//gc.setFill(Color.AQUA);
+		//gc.fillRect(x, y, w, h);
+		
 		int sx = 0;
 		int sy = 0;
 		int width = 0;
@@ -48,6 +54,11 @@ public class Spike extends Element {
 		//advance when button pushed
 	}
 	
+	@Override
+	public void onCollision(boolean isOn) {
+		if(status == 0)
+			puzzle.stopPlayer();
+	};
 	
 	@Override
 	public String toString() { //ex: spike,600,425,110,50,blue,h,1

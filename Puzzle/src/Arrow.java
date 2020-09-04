@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 
 public class Arrow extends Element{
 	private final static Image ARROW = new Image(PuzzleUtil.FILE_PATH_RES+"arrow.png", false);
-	
 	private Dir arrowDir;
 	private String levelName;
 	private int destinationX, destinationY;
@@ -24,9 +23,6 @@ public class Arrow extends Element{
 
 	@Override
 	public void draw(GraphicsContext gc) {
-		gc.setFill(Color.TRANSPARENT);
-		gc.fillRect(x, y, w, h);
-
 		int sx = arrowDir.getInt()*100;		
 		gc.drawImage(ARROW, sx, 0, 100, 100, x, y, w, h);
 	}
@@ -44,7 +40,7 @@ public class Arrow extends Element{
 		a.add(new Integer(y));
 		a.add(new Integer(w));
 		a.add(new Integer(h));
-		a.add(new Integer(arrowDir.getInt()));
+		a.add(new String(arrowDir.toString()));
 		a.add(new String(levelName));
 		a.add(new Integer(destinationX));
 		a.add(new Integer(destinationY));
