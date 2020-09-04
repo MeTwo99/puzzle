@@ -162,6 +162,8 @@ public class Puzzle extends Application {
           for(int i = 0; i < 4; i++)
         	  v[i] = Integer.parseInt(data[i+1]); 
           
+          Dir dir;
+          Col color;
           switch(data[0]) {
           case "t":
         	  levelElements.add(new Tile(v[0], v[1], v[2], v[3],data[5]));
@@ -173,21 +175,24 @@ public class Puzzle extends Application {
         	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
         	  break;
           case "a":
-        	  Dir dir = new Dir(Integer.parseInt(data[5]));
+        	  dir = new Dir(data[5]);
         	  int dx = Integer.parseInt(data[7]), dy = Integer.parseInt(data[8]);
         	  levelElements.add(new Arrow(v[0], v[1], v[2], v[3], dir, data[6], dx, dy, this));
         	  break;
           case "sp":
-        	  levelElements.add(new squarePlate(v[0], v[1], v[2], v[3], data[5]));//last int is color
+        	  color = new Col(data[5]);
+        	  levelElements.add(new SquarePlate(v[0], v[1], v[2], v[3], color));
         	  break;
           case "cp":
-        	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));//last int is color
+        	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));
         	  break;
           case "spike":
-        	  levelElements.add(new Spike(v[0], v[1], v[2], v[3], data[5], data[6].charAt(0), Integer.parseInt(data[7])));
+        	  color = new Col(data[5]);
+        	  levelElements.add(new Spike(v[0], v[1], v[2], v[3], color, data[6].charAt(0), Integer.parseInt(data[7])));
         	  break;
           case "launchpad":
-        	  levelElements.add(new Launchpad(v[0], v[1], v[2], v[3], data[5], data[6].charAt(0), Integer.parseInt(data[7])));
+        	  dir = new Dir(data[5]);
+        	  levelElements.add(new Launchpad(v[0], v[1], v[2], v[3], dir, Integer.parseInt(data[6])));
           }
         }
         scan.close();

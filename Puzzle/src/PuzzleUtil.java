@@ -26,7 +26,7 @@ class PuzzleUtil{
 	//images
 	public static final Map<String, Image> TEXTURES = new HashMap<String, Image>(); 
 	static {
-		TEXTURES.put("checker", new Image(FILE_PATH_RES+"checker.jpg", false));
+		TEXTURES.put("checker", new Image(FILE_PATH_RES+"tile.png", false));
 		TEXTURES.put("gray", new Image(FILE_PATH_RES+"gray.jpg", false));
 		TEXTURES.put("brick", new Image(FILE_PATH_RES+"wall.jpg", false));
 		TEXTURES.put("jukebox", new Image(FILE_PATH_RES+"jukeboxes.png", false));
