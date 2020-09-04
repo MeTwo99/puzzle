@@ -164,10 +164,10 @@ public class Puzzle extends Application {
           
           switch(data[0]) {
           case "t":
-        	  levelElements.add(new Tile(v[0], v[1], v[2], v[3], PuzzleUtil.TEXTURES.get(data[5])));
+        	  levelElements.add(new Tile(v[0], v[1], v[2], v[3],data[5]));
         	  break;
           case "w":
-        	  levelElements.add(new Wall(v[0], v[1], v[2], v[3], PuzzleUtil.TEXTURES.get(data[5])));
+        	  levelElements.add(new Wall(v[0], v[1], v[2], v[3], data[5]));
         	  break;
           case "j":
         	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));

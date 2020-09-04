@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -34,4 +36,18 @@ public class Arrow extends Element{
 			puzzle.setLevelDestination(levelName, destinationX, destinationY);
 		}
 	};
+	@Override
+	public String toString() {
+		ArrayList<Object> a = new ArrayList<Object>();
+		a.add(new String("a"));
+		a.add(new Integer(x));
+		a.add(new Integer(y));
+		a.add(new Integer(w));
+		a.add(new Integer(h));
+		a.add(new Integer(arrowDir.getInt()));
+		a.add(new String(levelName));
+		a.add(new Integer(destinationX));
+		a.add(new Integer(destinationY));
+		return PuzzleUtil.getSaveData(a);
+	}
 }

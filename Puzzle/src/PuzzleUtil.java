@@ -29,30 +29,8 @@ class PuzzleUtil{
 		TEXTURES.put("checker", new Image(FILE_PATH_RES+"checker.jpg", false));
 		TEXTURES.put("gray", new Image(FILE_PATH_RES+"gray.jpg", false));
 		TEXTURES.put("brick", new Image(FILE_PATH_RES+"wall.jpg", false));
+		TEXTURES.put("jukebox", new Image(FILE_PATH_RES+"jukeboxes.png", false));
 		TEXTURES.put("none", null);
-	}
-	
-	public static void repeatImage(GraphicsContext gc, Image i, int x, int y, int w, int h) {
-		if (i == null || gc == null)
-			return;
-		
-		double iw = i.getWidth();
-		int rows = (int)Math.floor(w/iw);
-		double remainderWidth = w - (rows*iw);
-		double ih = i.getHeight();
-		int cols = (int)Math.floor(h/ih);
-		double remainderHeight = h - (cols*ih);
-		
-		for(int r = 0; r < rows; r++) {
-			for(int c = 0; c < cols; c++) {
-				gc.drawImage(i, x+r*iw, y+c*ih);
-			}
-			gc.drawImage(i, x+r*iw, y+cols*ih, iw, remainderHeight);
-		}
-		for (int c = 0; c < cols; c++) {
-			gc.drawImage(i, x+rows*iw, y+c*ih, remainderWidth, ih);
-		}
-		gc.drawImage(i, x+rows*iw, y+cols*ih, remainderWidth, remainderHeight);
 	}
 	
 	//checks if elements are overlapping
@@ -69,5 +47,15 @@ class PuzzleUtil{
 	} 
 	public static boolean isOn(int xs, int ys, int ws, int hs, int xL, int yL, int wL, int hL) {	
 		return xs >= xL && xs <= xL + ws && ys >= yL && ys <= yL + hs;
+	}
+	
+	public static String getSaveData(ArrayList<Object> a) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < a.size(); i++) {
+			sb.append(a.get(i));
+			if (i != a.size()-1)
+				sb.append(",");
+		}
+		return sb.toString();
 	}
 }

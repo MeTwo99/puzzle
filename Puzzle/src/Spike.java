@@ -1,10 +1,13 @@
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class Spike extends Wall {
+public class Spike extends Element {
 	
 	private final static Image SPIKE = new Image(PuzzleUtil.FILE_PATH_RES+"spike.png", false);
 	private int spikeCycle = 0, spikeDir = 0, bounceFrames = 0;
+	//private Dir orientation;
 	
 	public Spike() {
 		this(0, 0, PuzzleUtil.SPIKE_WIDTH, PuzzleUtil.SPIKE_HEIGHT,"test",'h',0);
@@ -15,7 +18,6 @@ public class Spike extends Wall {
 	
 	@Override
 	public void draw(GraphicsContext gc) {
-		//600 vertical, 400 horizontal
 		int sx = 0;//spikeCycle*400;
 		int sy = 0;//spikeDir*600;
 		int width = 0;
@@ -97,5 +99,16 @@ public class Spike extends Wall {
 			bounceFrames = 0;
 			spikeCycle = (spikeCycle == 3 ? 0 : spikeCycle + 1);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		ArrayList<Object> a = new ArrayList<Object>();
+		a.add(new String("spike"));
+		a.add(new Integer(x));
+		a.add(new Integer(y));
+		a.add(new Integer(w));
+		a.add(new Integer(h));
+		return PuzzleUtil.getSaveData(a);
 	}
 }

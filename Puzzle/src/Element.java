@@ -1,5 +1,4 @@
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
 abstract class Element
 {
@@ -10,7 +9,6 @@ abstract class Element
 	protected String c;
 	protected char orientation;
 	protected int status;
-	protected Image i;
 	
 	public Element (int x, int y, int w, int h, String c, char orientation, int status) {
 		this.x = x;
@@ -30,20 +28,11 @@ abstract class Element
 		this.c = c;
 	}
 	
-	public Element(int x, int y, int w, int h, Image i) {
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
-		this.i = i;
-	}
-	
 	public Element(int x, int y, int w, int h) {
 		this.x = x;
 		this.y = y;
 		this.w = w;
 		this.h = h;
-		i = null;
 	}
 	
 	public int getX() {

@@ -1,23 +1,26 @@
+import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
-class Wall extends Element
-{
-	public Wall(int x, int y, int w, int h, String c, char orientation, int status) {
-		super(x,y,w,h,c,orientation,status);
-	}
-	public Wall(int x, int y, int w, int h, String c) {
-		super(x,y,w,h,c);
-	}
-	public Wall(int x, int y, int w, int h, Image i) {
-		super(x,y,w,h,i);
-	}
-	public Wall(int x, int y, int w, int h) {
-		super(x,y,w,h);
+class Wall extends Tile
+{	
+	public Wall(int x, int y, int w, int h, String imageName) {
+		super(x,y,w,h,imageName);
 	}
 	
 	@Override
 	public void draw(GraphicsContext gc) {
-		PuzzleUtil.repeatImage(gc, i, x, y, w, h);
+		repeatImage(gc, image, x, y, w, h);
+	}
+	
+	@Override
+	public String toString() {
+		ArrayList<Object> a = new ArrayList<Object>();
+		a.add(new String("w"));
+		a.add(new Integer(x));
+		a.add(new Integer(y));
+		a.add(new Integer(w));
+		a.add(new Integer(h));
+		a.add(new String(imageName));
+		return PuzzleUtil.getSaveData(a);
 	}
 }

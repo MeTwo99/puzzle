@@ -1,17 +1,15 @@
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class Jukebox extends Wall {
 	
-	private final static Image JUKEBOX = new Image(PuzzleUtil.FILE_PATH_RES+"jukeboxes.png", false);
 	private int jukeboxBounceCycle = 1, jukeboxDir = 0, bounceFrames = 0;
 	
-	public Jukebox() {
-		this(635, 450, PuzzleUtil.JUKEBOX_WIDTH, PuzzleUtil.JUKEBOX_HEIGHT);
-	}
 	public Jukebox(int x, int y, int w, int h) {
-		super(x,y,w,h);
+		super(x,y,w,h,"jukebox");
 	}
 	
 	@Override
@@ -20,7 +18,7 @@ public class Jukebox extends Wall {
 		int sx = jukeboxBounceCycle*400;
 		int sy = jukeboxDir*600;
 		
-		gc.drawImage(JUKEBOX, sx, sy, 350, 600, x, y, w, h);
+		gc.drawImage(image, sx, sy, 350, 600, x, y, w, h);
 	}
 	@Override
 	//every frame, do this
@@ -34,6 +32,17 @@ public class Jukebox extends Wall {
 			bounceFrames = 0;
 			jukeboxBounceCycle = (jukeboxBounceCycle == 3 ? 0 : jukeboxBounceCycle + 1);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		ArrayList<Object> a = new ArrayList<Object>();
+		a.add(new String("j"));
+		a.add(new Integer(x));
+		a.add(new Integer(y));
+		a.add(new Integer(w));
+		a.add(new Integer(h));
+		return PuzzleUtil.getSaveData(a);
 	}
 }
 
