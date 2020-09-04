@@ -48,6 +48,13 @@ public class Spike extends Element {
 		
 		gc.drawImage(SPIKE, sx, sy, width, height, x, y, w, h);
 	}
+	public Col getColor() {
+		return color;
+	}
+	public void changeStatus() {
+		status = status == 0 ? 1 : 0;
+	}
+	
 	@Override
 	//every frame, do this
 	public void update(long millis) {

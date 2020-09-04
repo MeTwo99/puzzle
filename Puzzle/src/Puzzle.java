@@ -184,7 +184,7 @@ public class Puzzle extends Application {
         	  break;
           case "sp":
         	  color = new Col(data[5]);
-        	  levelElements.add(new SquarePlate(v[0], v[1], v[2], v[3], color));
+        	  levelElements.add(new SquarePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), this));
         	  break;
           case "cp":
         	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));
@@ -293,6 +293,16 @@ public class Puzzle extends Application {
 	}
 	public void stopPlayer() {
 		isCollision = true;
+	}
+	public void activateColor(Col color) {
+		for (Element e : levelElements) {
+			if (e instanceof Spike) {
+				Spike s = ((Spike) e);
+				if (s.getColor().getInt() == color.getInt())
+					s.changeStatus();
+			}
+		}
+		
 	}
 	
 	//key inputs
