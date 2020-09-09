@@ -110,7 +110,7 @@ public class Puzzle extends Application {
 
 		ta.start();
 		
-		saveAndLoadNextLevel("level1");
+		saveAndLoadNextLevel("level3");
 		levelCanvas = new LoadLevel();
 		fp.getChildren().add(levelCanvas);
 		
@@ -187,7 +187,8 @@ public class Puzzle extends Application {
         	  levelElements.add(new SquarePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), this));
         	  break;
           case "cp":
-        	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3],Integer.parseInt(data[5])));
+        	  color = new Col(data[5]);
+        	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), this));
         	  break;
           case "spike":
         	  color = new Col(data[5]);

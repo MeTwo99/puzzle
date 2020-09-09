@@ -28,6 +28,7 @@ class PuzzleUtil{
 	static {
 		TEXTURES.put("checker", new Image(FILE_PATH_RES+"tile.png", false));
 		TEXTURES.put("gray", new Image(FILE_PATH_RES+"gray.jpg", false));
+		TEXTURES.put("stone", new Image(FILE_PATH_RES+"stoneFloor.jpg", false));
 		TEXTURES.put("brick", new Image(FILE_PATH_RES+"wall.jpg", false));
 		TEXTURES.put("jukebox", new Image(FILE_PATH_RES+"jukeboxes.png", false));
 		TEXTURES.put("none", null);

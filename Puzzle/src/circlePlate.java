@@ -1,43 +1,52 @@
+import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 public class circlePlate extends Element{
-
-	private final static Image pCPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"purple_circle_plate.png", false);
-	private final static Image bCPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"blue_cirlce_plate.png", false);
-	private final static Image oCPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"orange_circle_plate.png", false);
-	private final static Image yCPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"yellow_circle_plate.png", false);
 	
-	private int color;
+	private final static Image CPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"circle_plates.png", false);
+	private Col color;
+	private int status;
+	private Puzzle puzzle;
 	
-	public circlePlate(int x, int y, int w, int h, int c) {
+	public circlePlate(int x, int y, int w, int h, Col c, int status, Puzzle p) {
 		super(x,y,w,h);
 		color = c;
-		
+		this.status = status;
+		puzzle = p;
 	}
 	
 	@Override
 	public void draw(GraphicsContext gc) {
+		int sx = status * 163;
+		int sy = 241 * color.getInt();
 		
-		switch(color) {
-        //to draw purple plate
-		case 0:
-        	gc.drawImage(pCPLATE, x, y, 100, 100, x, y, w, h);
-      	  break;
-      	//to draw blue plate
-        case 1:
-        	gc.drawImage(bCPLATE, x, y, 100, 100, x, y, w, h);
-      	  break;
-      	//to draw orange plate
-        case 2:
-        	gc.drawImage(oCPLATE, x, y, 100, 100, x, y, w, h);
-      	  break;
-      	//to draw yellow plate
-        case 3:
-        	gc.drawImage(yCPLATE, x, y, 100, 100, x, y, w, h);
-      	  break;
-       
+		gc.drawImage(CPLATE, sx, sy, 100, 100, x, y, w, h);
+	}
+	@Override
+	//every frame, do this
+	public void update(long millis) {
+		//advance when button pushed
+	}
+	
+	@Override
+	public void onCollision(boolean isOn) {
+		if(isOn && status == 0) {
+			puzzle.activateColor(color);
+			status = 1;
 		}
+	};
+	
+	@Override
+	public String toString() { //ex: sp,500,525,100,100,yellow
+		ArrayList<Object> a = new ArrayList<Object>();
+		a.add(new String("sp"));
+		a.add(new Integer(x));
+		a.add(new Integer(y));
+		a.add(new Integer(w));
+		a.add(new Integer(h));
+		a.add(new String(color.toString()));		
+		a.add(new Integer(status));
+		return PuzzleUtil.getSaveData(a);
 	}
 }

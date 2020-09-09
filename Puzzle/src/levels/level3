@@ -1,0 +1,49 @@
+t,200,200,600,600,stone
+t,300,100,100,100,stone
+
+a,200,200,100,100,left,level3,0,0
+a,300,100,100,100,up,level1,420,200
+a,450,700,100,100,down,level1,420,200
+
+//left walls from top to bottom
+w,200,350,250,25,brick
+w,200,500,250,25,brick
+w,200,650,250,25,brick
+
+//crossbars on left
+w,425,325,25,50,brick
+w,425,475,25,75,brick
+
+//right walls from top to bottom
+w,550,350,250,25,brick
+w,550,500,250,25,brick
+w,550,650,250,25,brick
+
+//crossbars on right
+w,550,325,25,50,brick
+w,550,475,25,75,brick
+
+//back goal looking thing
+w,425,200,25,75,brick
+w,550,200,25,75,brick
+w,450,200,100,25,brick
+
+//spikes from top down
+spike,415,250,50,80,blue,v,0
+spike,535,250,50,80,green,v,0
+spike,450,300,110,50,purple,h,0
+spike,450,325,110,50,yellow,h,0
+
+//circle plates top to bottom left to right
+cp,215,385,100,100,yellow,0
+cp,215,530,100,100,purple,0
+cp,320,530,100,100,green,0
+cp,575,385,100,100,blue,0
+cp,680,385,100,100,purple,0
+cp,680,530,100,100,yellow,0
+
+
+
+
+
+
