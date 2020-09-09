@@ -51,14 +51,18 @@ class Player extends Element
 	}
 	
 	//mutators
-	public Player setDirection(Dir d) {
+	public Player setDirection(Dir d, boolean walk) {
 		playerDir = d;
-		setWalking(true);
+		if (walk) setWalking(true);
 		return this;
 	}
 	public Player setWalking(boolean w) {
 		walking = w;
 		return this;
+	}
+	public void setLocation(int newX, int newY) {
+		x = newX;
+		y = newY;
 	}
 	//accessors
 	public Dir getDir(){

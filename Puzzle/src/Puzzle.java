@@ -110,7 +110,7 @@ public class Puzzle extends Application {
 
 		ta.start();
 		
-		saveAndLoadNextLevel("level3");
+		saveAndLoadNextLevel("level1");
 		levelCanvas = new LoadLevel();
 		fp.getChildren().add(levelCanvas);
 		
@@ -295,6 +295,19 @@ public class Puzzle extends Application {
 	public void stopPlayer() {
 		isCollision = true;
 	}
+	public void launchPlayer(Dir direction) {
+		if(direction.toString().equals("left")) {
+			//zack.setDirection(direction, false);
+			for(int i = 1; i < 15; i++) 
+				zack.setLocation(zack.getX()-i,zack.getY());
+			
+		}
+		if(direction.toString().equals("right")) {
+			//zack.setDirection(direction, false);
+			for(int i = 1; i < 15; i++)
+				zack.setLocation(zack.getX()+i,zack.getY()); 
+		}
+	}
 	public void activateColor(Col color) {
 		for (Element e : levelElements) {
 			if (e instanceof Spike) {
@@ -315,13 +328,13 @@ public class Puzzle extends Application {
 		
 		public void handle(KeyEvent event) {
 			if(event.getCode() == KeyCode.UP) 
-				p.setDirection(Dir.UP);
+				p.setDirection(Dir.UP, true);
 			if(event.getCode() == KeyCode.DOWN) 
-				p.setDirection(Dir.DOWN);
+				p.setDirection(Dir.DOWN, true);
 			if(event.getCode() == KeyCode.LEFT) 
-				p.setDirection(Dir.LEFT);
+				p.setDirection(Dir.LEFT, true);
 			if(event.getCode() == KeyCode.RIGHT) 
-				p.setDirection(Dir.RIGHT);
+				p.setDirection(Dir.RIGHT,true);
 		}
 	}
 	public class KeyListenerUp implements EventHandler<KeyEvent> {

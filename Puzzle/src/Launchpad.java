@@ -36,6 +36,10 @@ public class Launchpad extends Element{
 	public void onCollision(boolean isOn) {
 		if(status == 1)
 			puzzle.stopPlayer();
+		if(isOn && status == 0) {
+			puzzle.launchPlayer(direction);
+			status = 1;
+		}
 	}
 	
 	@Override
