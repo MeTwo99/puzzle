@@ -1,6 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 
-abstract class Element
+public abstract class Element
 {
 	protected int x;
 	protected int y;

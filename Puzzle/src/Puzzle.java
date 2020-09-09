@@ -34,7 +34,7 @@ public class Puzzle extends Application {
 	private int fadeValue, fadeDirection, destinationX, destinationY;
 	private String changingLevel = null;
 	private boolean isCollision;
-	
+	private DropMenu dropMenu= new DropMenu(this);
 	
 	public static void main(String args[]) {
 		Application.launch(args);
@@ -231,6 +231,10 @@ public class Puzzle extends Application {
 				gc.setFill(new Color(0,0,0,(double)fadeValue/100));
 				gc.fillRect(0, 0, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 			}
+			
+			//drop menu drawn
+			if(dropMenu.isShown())
+				dropMenu.draw(gc);
 		}
 	}	 
 	
@@ -282,10 +286,14 @@ public class Puzzle extends Application {
 			
 			//draw the level
 			levelCanvas.draw();
+			
+			//Drop down menu logic
+			//dropMenu
+			
 		}
 	}
 	
-	//controls
+	// ----- CONTROLS ------
 	public void setLevelDestination(String levelName, int x, int y) {
 		changingLevel = levelName;
 		fadeDirection = 1;
@@ -319,6 +327,11 @@ public class Puzzle extends Application {
 		
 	}
 	
+	public void createSaveFile() {
+		//We need to create a save file telling where the player is, what level they were on...
+		//The other save files should already be present in src/saves
+	}
+	
 	//key inputs
 	public class KeyListenerDown implements EventHandler<KeyEvent> {
 		private Player p;
@@ -327,14 +340,32 @@ public class Puzzle extends Application {
 		}
 		
 		public void handle(KeyEvent event) {
-			if(event.getCode() == KeyCode.UP) 
-				p.setDirection(Dir.UP, true);
-			if(event.getCode() == KeyCode.DOWN) 
-				p.setDirection(Dir.DOWN, true);
-			if(event.getCode() == KeyCode.LEFT) 
-				p.setDirection(Dir.LEFT, true);
-			if(event.getCode() == KeyCode.RIGHT) 
-				p.setDirection(Dir.RIGHT,true);
+			
+			if(event.getCode() == KeyCode.ESCAPE) {
+				dropMenu.setShown(!dropMenu.isShown());
+				dropMenu.setSelected(0);
+			}
+			if(dropMenu.isShown()) {
+				//stop the player and set the select on the first position
+				p.setWalking(false);
+				//control the menu
+				if(event.getCode() == KeyCode.UP) 
+					dropMenu.highlightNext(-1);
+				if(event.getCode() == KeyCode.DOWN) 
+					dropMenu.highlightNext(1);
+				if(event.getCode() == KeyCode.ENTER) 
+					dropMenu.selectCurrent();
+			}
+			else {
+				if(event.getCode() == KeyCode.UP) 
+					p.setDirection(Dir.UP, true);
+				if(event.getCode() == KeyCode.DOWN) 
+					p.setDirection(Dir.DOWN, true);
+				if(event.getCode() == KeyCode.LEFT) 
+					p.setDirection(Dir.LEFT, true);
+				if(event.getCode() == KeyCode.RIGHT) 
+					p.setDirection(Dir.RIGHT,true);
+			}
 		}
 	}
 	public class KeyListenerUp implements EventHandler<KeyEvent> {

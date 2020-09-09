@@ -53,7 +53,8 @@ class Player extends Element
 	//mutators
 	public Player setDirection(Dir d, boolean walk) {
 		playerDir = d;
-		if (walk) setWalking(true);
+		if (walk) 
+			setWalking(true);
 		return this;
 	}
 	public Player setWalking(boolean w) {
