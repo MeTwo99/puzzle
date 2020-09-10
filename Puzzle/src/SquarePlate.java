@@ -31,7 +31,7 @@ public class SquarePlate extends Element{
 	
 	@Override
 	public void onCollision(boolean isOn) {
-		if(isOn && status == 0) {
+		if(status == 0) {
 			puzzle.activateColor(color);
 			status = 1;
 		}

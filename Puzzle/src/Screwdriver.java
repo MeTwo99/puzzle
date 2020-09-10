@@ -29,7 +29,7 @@ public class Screwdriver extends Element{
 	
 	@Override
 	public void onCollision(boolean isOn) {
-		if(isOn && status == 0) {
+		if(status == 0) {
 			status = 1;
 		}
 	};
