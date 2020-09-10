@@ -1,9 +1,9 @@
 t,200,200,600,600,stone
 t,300,100,100,100,stone
 
-a,200,200,100,100,left,level3,0,0
-a,300,100,100,100,up,level1,420,200
-a,450,700,100,100,down,level1,420,200
+a,200,200,100,100,left,winnerMenu,0,0
+a,300,100,100,100,up,winnerMenu,420,200
+a,450,700,100,100,down,level2,450,100
 
 //left walls from top to bottom
 w,200,350,250,25,brick
@@ -24,13 +24,13 @@ w,550,325,25,50,brick
 w,550,475,25,75,brick
 
 //back goal looking thing
-w,425,200,25,75,brick
-w,550,200,25,75,brick
+w,425,200,25,50,brick
+w,550,200,25,50,brick
 w,450,200,100,25,brick
 
 //spikes from top down
-spike,415,250,35,80,blue,v,0
-spike,535,250,35,80,green,v,0
+spike,420,250,40,80,blue,v,0
+spike,545,250,40,80,green,v,0
 spike,450,300,100,40,purple,h,0
 spike,450,325,100,40,yellow,h,0
 
@@ -45,6 +45,12 @@ cp,680,530,100,100,yellow,0
 //screwdriver
 screwdriver,620,200,150,150,0
 
+//void boundaries
+w,100,100,100,800,clear
+w,800,100,100,800,clear
+w,100,800,800,100,clear
+w,100,100,200,100,clear
+w,400,100,400,100,clear
 
 
 

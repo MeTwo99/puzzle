@@ -1,5 +1,6 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,12 +17,17 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+
 
 public class Puzzle extends Application {
 	
@@ -37,11 +43,31 @@ public class Puzzle extends Application {
 	private DropMenu dropMenu= new DropMenu(this);
 	
 	public static void main(String args[]) {
+		
+		//start music
+		Thread thread = new Thread(task);
+	    thread.start();
 		Application.launch(args);
 	}
 	
+	//add music
+	final static Task task = new Task() {
+
+        @Override
+        protected Object call() throws Exception {
+            int s = 100;
+            AudioClip audio = new AudioClip(PuzzleUtil.FILE_PATH_RES+"zachWav.wav");
+            audio.setVolume(0.99f);
+            audio.setCycleCount(s);
+            audio.play();
+            return null;
+        }
+    };
+    
+    
 	//MAIN MENU	
 	public void start(Stage stage) {
+		
 		applicationStage = stage;
 		//make the image	
 		Image themenu = new Image(PuzzleUtil.FILE_PATH_RES+"puzzle_title.png", false);	
@@ -82,7 +108,7 @@ public class Puzzle extends Application {
 	
 	 public class startHandler implements EventHandler<ActionEvent>{
 	      public void handle (ActionEvent e){
-	    	  startGameButton(applicationStage);    	  
+	    	  startGameButton(applicationStage);   
 	      }
 	 }
 	
