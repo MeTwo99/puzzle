@@ -21,8 +21,6 @@ public class Spike extends Element {
 	
 	@Override
 	public void draw(GraphicsContext gc) {
-		//gc.setFill(Color.AQUA);
-		//gc.fillRect(x, y, w, h);
 		
 		int sx = 0;
 		int sy = 0;

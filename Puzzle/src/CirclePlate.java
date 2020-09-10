@@ -2,14 +2,14 @@ import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class circlePlate extends Element{
+public class CirclePlate extends Element{
 	
 	private final static Image CPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"circle_plates_2.png", false);
 	private Col color;
 	private int status;
 	private Puzzle puzzle;
 	
-	public circlePlate(int x, int y, int w, int h, Col c, int status, Puzzle p) {
+	public CirclePlate(int x, int y, int w, int h, Col c, int status, Puzzle p) {
 		super(x,y,w,h);
 		color = c;
 		this.status = status;
@@ -40,7 +40,7 @@ public class circlePlate extends Element{
 	@Override
 	public String toString() { //ex: sp,500,525,100,100,yellow
 		ArrayList<Object> a = new ArrayList<Object>();
-		a.add(new String("sp"));
+		a.add(new String("cp"));
 		a.add(new Integer(x));
 		a.add(new Integer(y));
 		a.add(new Integer(w));

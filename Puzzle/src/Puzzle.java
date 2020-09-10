@@ -91,7 +91,7 @@ public class Puzzle extends Application {
 		//border pane holds everything
 		BorderPane bp = new BorderPane();
 		bp.setBackground(new Background(myImage));
-		bp.setPrefSize(1000, 1000);
+		bp.setPrefSize(PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 		bp.setBottom(myButtons);
 		//lift the buttons off the ground
 		bp.setPadding(new Insets(0, 00, 100, 0));
@@ -186,51 +186,58 @@ public class Puzzle extends Application {
             	continue;
           String[] data = l.split(",");
           
-          //the x,y,w,h common to all elements
-          int[] v = new int[4];
-          for(int i = 0; i < 4; i++)
-        	  v[i] = Integer.parseInt(data[i+1]); 
-          
-          Dir dir;
-          Col color;
-          switch(data[0]) {
-          case "t":
-        	  levelElements.add(new Tile(v[0], v[1], v[2], v[3],data[5]));
-        	  break;
-          case "w":
-        	  levelElements.add(new Wall(v[0], v[1], v[2], v[3], data[5]));
-        	  break;
-          case "j":
-        	  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
-        	  break;
-          case "a":
-        	  dir = new Dir(data[5]);
-        	  int dx = Integer.parseInt(data[7]), dy = Integer.parseInt(data[8]);
-        	  levelElements.add(new Arrow(v[0], v[1], v[2], v[3], dir, data[6], dx, dy, this));
-        	  break;
-          case "sp":
-        	  color = new Col(data[5]);
-        	  levelElements.add(new SquarePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), this));
-        	  break;
-          case "cp":
-        	  color = new Col(data[5]);
-        	  levelElements.add(new circlePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), this));
-        	  break;
-          case "spike":
-        	  color = new Col(data[5]);
-        	  levelElements.add(new Spike(v[0], v[1], v[2], v[3], color, data[6].charAt(0), Integer.parseInt(data[7]), this));
-        	  break;
-          case "launchpad":
-        	  dir = new Dir(data[5]);
-        	  levelElements.add(new Launchpad(v[0], v[1], v[2], v[3], dir, Integer.parseInt(data[6]), this));
-        	  break;
-          case "screwdriver":
-        	  //color = new Col(data[])
-        	  levelElements.add(new Screwdriver(v[0], v[1], v[2], v[3], Integer.parseInt(data[5]), this));
-        	  break;
-          }
-        }
-        scan.close();
+          try {
+        	  //the x,y,w,h common to all elements
+			  int[] v = new int[4];
+			  for(int i = 0; i < 4; i++)
+				  v[i] = Integer.parseInt(data[i+1]); 
+			  
+			  Dir dir;
+			  Col color;
+			  switch(data[0]) {
+			  case "t":
+				  levelElements.add(new Tile(v[0], v[1], v[2], v[3],data[5]));
+				  break;
+			  case "w":
+				  levelElements.add(new Wall(v[0], v[1], v[2], v[3], data[5]));
+				  break;
+			  case "j":
+				  levelElements.add(new Jukebox(v[0], v[1], v[2], v[3]));
+				  break;
+			  case "a":
+				  dir = new Dir(data[5]);
+				  int dx = Integer.parseInt(data[7]), dy = Integer.parseInt(data[8]);
+				  levelElements.add(new Arrow(v[0], v[1], v[2], v[3], dir, data[6], dx, dy, this));
+				  break;
+			  case "sp":
+				  color = new Col(data[5]);
+				  levelElements.add(new SquarePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), this));
+				  break;
+			  case "cp":
+				  color = new Col(data[5]);
+				  levelElements.add(new CirclePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), this));
+				  break;
+			  case "spike":
+				  color = new Col(data[5]);
+				  levelElements.add(new Spike(v[0], v[1], v[2], v[3], color, data[6].charAt(0), Integer.parseInt(data[7]), this));
+				  break;
+			  case "launchpad":
+				  dir = new Dir(data[5]);
+				  levelElements.add(new Launchpad(v[0], v[1], v[2], v[3], dir, Integer.parseInt(data[6]), this));
+				  break;
+			  case "screwdriver":
+				  levelElements.add(new Screwdriver(v[0], v[1], v[2], v[3], Integer.parseInt(data[5]), this));
+				  break;
+			  case "door":
+				  levelElements.add(new Door(v[0], v[1], v[2], v[3], Integer.parseInt(data[5]), Integer.parseInt(data[6]), Integer.parseInt(data[7]),this));
+				  break;
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.out.println("Error with line:" + l);
+				e.printStackTrace();
+			}
+		}
+		scan.close();
 	}
 
 	public class LoadLevel extends Canvas {
@@ -292,6 +299,7 @@ public class Puzzle extends Application {
 			for (Element e : levelElements) {
 				e.update(millis);
 			}
+			//change the level after fade out finishes
 			if( fadeValue == 100 ) {
 				fadeDirection = -1;
 				saveAndLoadNextLevel(changingLevel);
@@ -316,11 +324,7 @@ public class Puzzle extends Application {
 				zack.goTo(tempX, tempY);
 			
 			//draw the level
-			levelCanvas.draw();
-			
-			//Drop down menu logic
-			//dropMenu
-			
+			levelCanvas.draw();			
 		}
 	}
 	

@@ -4,14 +4,12 @@ import javafx.scene.image.Image;
 
 class PuzzleUtil{
 	//constants
-	public static final int MAX_WIDTH = 1000;
-	public static final int MAX_HEIGHT = 1000;
+	public static final int MAX_WIDTH = 1200;
+	public static final int MAX_HEIGHT = 900;
 	public static final String PATH = System.getProperty("user.dir");
 	public static final String FILE_PATH_RES = "file:" + PATH + "/src/res/";
 	public static final String LEVEL_PATH = PATH+"/src/levels/";
 	public static final String SAVE_PATH = PATH+"/src/saves/";
-	public static final int ZACK_WIDTH = 66;
-	public static final int ZACK_HEIGHT = 100;
 	public static final int JUKEBOX_WIDTH = 70;
 	public static final int JUKEBOX_HEIGHT = 100;
 	public static final int SPIKE_WIDTH = 50;

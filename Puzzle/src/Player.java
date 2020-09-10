@@ -4,13 +4,15 @@ import javafx.scene.image.Image;
 class Player extends Element
 {
 	private final static Image ZACK = new Image(PuzzleUtil.FILE_PATH_RES+"zack.png", false);
+	public static final int ZACK_WIDTH = 66;
+	public static final int ZACK_HEIGHT = 100;
 	private final static int PLAYER_SPEED = 2;
 	private int playerWalkCycle = 0, walkFrames = 0;
 	private Dir playerDir = Dir.DOWN;
 	private boolean walking = false;
 	
 	public Player() {
-		this(400, 600, PuzzleUtil.ZACK_WIDTH, PuzzleUtil.ZACK_HEIGHT);
+		this(570, 540, ZACK_WIDTH, ZACK_HEIGHT);
 	}
 	public Player(int x, int y, int w, int h) {
 		super(x,y,w,h);
