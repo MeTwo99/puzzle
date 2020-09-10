@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 
 public class Spike extends Element {
 	
-	private final static Image SPIKE = new Image(PuzzleUtil.FILE_PATH_RES+"spike.png", false);
+	private final static Image SPIKE = new Image(PuzzleUtil.FILE_PATH_RES+"spike_2.png", false);
 	private int status;
 	private char orientation;
 	private Col color;

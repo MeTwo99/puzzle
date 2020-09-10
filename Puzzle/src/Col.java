@@ -18,6 +18,9 @@ class Col {
         case "yellow":
 			c = 3;
 	      	break; 
+        case "green":
+        	c = 4;
+        	break;
 		}
 	}
 	
@@ -34,6 +37,8 @@ class Col {
         	return "purple";
         case 3:
 			return "yellow";
+        case 4:
+			return "green";
 		}
 		return "none";
 	}
@@ -42,4 +47,5 @@ class Col {
 	static final Col ORANGE = new Col(1);
 	static final Col PURPLE = new Col(2);
 	static final Col YELLOW = new Col(3);
+	static final Col GREEN = new Col(4);
 }

@@ -296,16 +296,19 @@ public class Puzzle extends Application {
 		isCollision = true;
 	}
 	public void launchPlayer(Dir direction) {
+		int millis = 50;
 		if(direction.toString().equals("left")) {
 			//zack.setDirection(direction, false);
-			for(int i = 1; i < 15; i++) 
+			for(int i = 1; i < 15; i++) {
 				zack.setLocation(zack.getX()-i,zack.getY());
+			}
 			
 		}
 		if(direction.toString().equals("right")) {
 			//zack.setDirection(direction, false);
-			for(int i = 1; i < 15; i++)
+			for(int i = 1; i < 15; i++) {
 				zack.setLocation(zack.getX()+i,zack.getY()); 
+			}
 		}
 	}
 	public void activateColor(Col color) {

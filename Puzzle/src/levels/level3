@@ -29,10 +29,10 @@ w,550,200,25,75,brick
 w,450,200,100,25,brick
 
 //spikes from top down
-spike,415,250,50,80,blue,v,0
-spike,535,250,50,80,green,v,0
-spike,450,300,110,50,purple,h,0
-spike,450,325,110,50,yellow,h,0
+spike,415,250,35,80,blue,v,0
+spike,535,250,35,80,green,v,0
+spike,450,300,100,40,purple,h,0
+spike,450,325,100,40,yellow,h,0
 
 //circle plates top to bottom left to right
 cp,215,385,100,100,yellow,0

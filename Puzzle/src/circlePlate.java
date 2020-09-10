@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 
 public class circlePlate extends Element{
 	
-	private final static Image CPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"circle_plates.png", false);
+	private final static Image CPLATE = new Image(PuzzleUtil.FILE_PATH_RES+"circle_plates_2.png", false);
 	private Col color;
 	private int status;
 	private Puzzle puzzle;
