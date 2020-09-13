@@ -24,7 +24,6 @@ public class Screwdriver extends Element{
 	@Override
 	//every frame, do this
 	public void update(long millis) {
-		//advance when button pushed
 	}
 	
 	@Override
@@ -37,12 +36,11 @@ public class Screwdriver extends Element{
 	@Override
 	public String toString() { //ex: sp,500,525,100,100,yellow
 		ArrayList<Object> a = new ArrayList<Object>();
-		a.add(new String("sp"));
+		a.add(new String("screwdriver"));
 		a.add(new Integer(x));
 		a.add(new Integer(y));
 		a.add(new Integer(w));
-		a.add(new Integer(h));
-		//a.add(new String(color.toString()));		
+		a.add(new Integer(h));	
 		a.add(new Integer(status));
 		return PuzzleUtil.getSaveData(a);
 	}

@@ -5,7 +5,9 @@ class Player extends Element
 {
 	private final static Image ZACK = new Image(PuzzleUtil.FILE_PATH_RES+"zack.png", false);
 	public static final int ZACK_WIDTH = 66;
-	public static final int ZACK_HEIGHT = 100;
+	public static final int ZACK_HEIGHT = 100;	
+	public static final int START_X = 570;
+	public static final int START_Y = 540;
 	private final static int PLAYER_SPEED = 2;
 	private int playerWalkCycle = 0, walkFrames = 0;
 	private Dir playerDir = Dir.DOWN;
@@ -62,10 +64,6 @@ class Player extends Element
 	public Player setWalking(boolean w) {
 		walking = w;
 		return this;
-	}
-	public void setLocation(int newX, int newY) {
-		x = newX;
-		y = newY;
 	}
 	//accessors
 	public Dir getDir(){

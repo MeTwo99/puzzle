@@ -10,6 +10,8 @@ class PuzzleUtil{
 	public static final String FILE_PATH_RES = "file:" + PATH + "/src/res/";
 	public static final String LEVEL_PATH = PATH+"/src/levels/";
 	public static final String SAVE_PATH = PATH+"/src/saves/";
+	public static final String LOAD_PATH = SAVE_PATH+"load/";
+	public static final String LOAD_FILE = LOAD_PATH+"data"; 
 	public static final int JUKEBOX_WIDTH = 70;
 	public static final int JUKEBOX_HEIGHT = 100;
 	public static final int SPIKE_WIDTH = 50;
@@ -22,7 +24,8 @@ class PuzzleUtil{
 
 	
 	//images
-	public static final Map<String, Image> TEXTURES = new HashMap<String, Image>(); 
+	public static final Map<String, Image> TEXTURES = new HashMap<String, Image>();
+	
 	static {
 		TEXTURES.put("checker", new Image(FILE_PATH_RES+"tile.png", false));
 		TEXTURES.put("gray", new Image(FILE_PATH_RES+"gray.jpg", false));
@@ -48,6 +51,7 @@ class PuzzleUtil{
 		return xs >= xL && xs <= xL + ws && ys >= yL && ys <= yL + hs;
 	}
 	
+	//create a comma seperated string to add to the save file
 	public static String getSaveData(ArrayList<Object> a) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < a.size(); i++) {
@@ -57,4 +61,11 @@ class PuzzleUtil{
 		}
 		return sb.toString();
 	}
+	
+	//check for and create the save and load directories
+	
+	
+	//delete the current save files
+	
+	
 }

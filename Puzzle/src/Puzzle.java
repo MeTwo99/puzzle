@@ -31,35 +31,46 @@ import java.util.*;
 
 public class Puzzle extends Application {
 	
+	private static boolean hasLoadFiles;
+	
 	private LoadLevel levelCanvas;
 	private List<Element> levelElements = new ArrayList<Element>();
 	private Player zack = new Player();
 	private Stage applicationStage;
 	private String currentLevel;
-	private AnimationTimer ta = new GameTimer();
+	private AnimationTimer ta;
 	private int fadeValue, fadeDirection, destinationX, destinationY;
 	private String changingLevel = null;
 	private boolean isCollision;
 	private DropMenu dropMenu= new DropMenu(this);
+	private boolean isGameOpen = false;
 	
 	public static void main(String args[]) {
+		//before anything, make sure there are these paths
+		File saveDir = new File(PuzzleUtil.SAVE_PATH);
+		if(!saveDir.exists())
+			saveDir.mkdir();		
+		File loadDir = new File(PuzzleUtil.LOAD_PATH);
+		if(!loadDir.exists())
+			loadDir.mkdir();
+		hasLoadFiles = loadDir.listFiles().length > 0;
 		
 		//start music
 		Thread thread = new Thread(task);
 	    thread.start();
+	    //launch game
 		Application.launch(args);
 	}
 	
 	//add music
 	final static Task task = new Task() {
-
         @Override
         protected Object call() throws Exception {
             int s = 100;
             AudioClip audio = new AudioClip(PuzzleUtil.FILE_PATH_RES+"zachWav.wav");
             audio.setVolume(0.99f);
             audio.setCycleCount(s);
-            audio.play();
+            //audio.play();
             return null;
         }
     };
@@ -78,9 +89,13 @@ public class Puzzle extends Application {
 		//buttons
 		Button start = new Button("Start");
 		start.setPrefSize(260, 90);
-		
+	    start.setOnAction(new startHandler());
+	    
 		Button load = new Button("Load Game");
 		load.setPrefSize(260, 90);
+		if(hasLoadFiles)
+			load.setOnAction(new loadHandler());
+		
 		
 		//box for buttons to put at the bottom of bp
 		HBox myButtons = new HBox();
@@ -94,89 +109,114 @@ public class Puzzle extends Application {
 		bp.setPrefSize(PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 		bp.setBottom(myButtons);
 		//lift the buttons off the ground
-		bp.setPadding(new Insets(0, 00, 100, 0));
-		
-		//make buttons work
-	    start.setOnAction(new startHandler());
+		bp.setPadding(new Insets(0, 0, 100, 0));
 	
 		//turn it on         
 		Scene scene = new Scene(bp);
-		stage.setScene(scene);
-		stage.show();
-	}
-	
-	
-	 public class startHandler implements EventHandler<ActionEvent>{
-	      public void handle (ActionEvent e){
-	    	  startGameButton(applicationStage);   
-	      }
-	 }
-	
-	public void startGameButton(Stage stage){
-		//delete all the save files
-
-		File saveDir = new File(PuzzleUtil.SAVE_PATH);
-		if (saveDir.exists()) {
-			File saves[] = saveDir.listFiles();
-			for (File f : saves) {
-				f.delete();
-			}
-		} else 
-			saveDir.mkdir();
-
-
-		/*File saves[] = new File(PuzzleUtil.SAVE_PATH).listFiles();
-		for (File f : saves) {
-			f.delete();
-		}*/
-
-		
-		FlowPane fp = new FlowPane();
-		fp.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-
-		ta.start();
-		
-		saveAndLoadNextLevel("level1");
-		levelCanvas = new LoadLevel();
-		fp.getChildren().add(levelCanvas);
-		
-		Scene scene = new Scene(fp, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
-		scene.setOnKeyPressed(new KeyListenerDown(zack));
-		scene.setOnKeyReleased(new KeyListenerUp(zack));
 		stage.setScene(scene);
 		stage.setTitle("Puzzle");
 		stage.show();
 	}
 
-	public void saveAndLoadNextLevel(String levelName) {
+	public class startHandler implements EventHandler<ActionEvent> {
+		public void handle(ActionEvent e) {
+			startGame();
+		}
+	}
+
+	public class loadHandler implements EventHandler<ActionEvent> {
+		public void handle(ActionEvent e) {
+			loadGame();
+		}
+	}
+	
+	public void startGame(){
+		deleteFilesAtPath(PuzzleUtil.SAVE_PATH);
+		currentLevel = "level1";
+		fadeValue = 100;
+		fadeDirection = -1;
+		destinationX = Player.START_X;
+		destinationY = Player.START_Y;
+		openGame();
+	}
+	
+	public void loadGame(){
+		//copy load data into saves
+		deleteFilesAtPath(PuzzleUtil.SAVE_PATH); //is redundant with line 133?
 		try {
-			//save the current level to save file
-			if(currentLevel != null) {
-				PrintWriter pw = new PrintWriter(new File(PuzzleUtil.SAVE_PATH+currentLevel+".save"));
-				for(Element e : levelElements) {
-					pw.println(e.toString());			
+			Scanner s;
+			PrintWriter pw;
+			
+			File dataFile = new File(PuzzleUtil.LOAD_FILE); //data file has level destination and player x y
+			s = new Scanner(dataFile);
+			currentLevel = s.next();
+			System.out.println(">" + currentLevel + "<");
+			destinationX = s.nextInt();
+			destinationY = s.nextInt();
+			s.close();
+			
+			File loadDir = new File(PuzzleUtil.LOAD_PATH);
+			for(File f : loadDir.listFiles()) {
+				String fileName = f.getName();
+				if (fileName.contains(".load")) { //not the data file
+					String name = fileName.substring(0, fileName.indexOf('.')) + ".save";
+					System.out.println(name);
+					File saveFile = new File(PuzzleUtil.SAVE_PATH+name);
+					saveFile.createNewFile();
+					
+					//copy file into new save file
+					pw = new PrintWriter(saveFile);
+					s = new Scanner(f);
+					while(s.hasNextLine()) {
+						pw.println(s.nextLine());
+					}
+					pw.close();
+					s.close();
 				}
-				pw.close();
 			}
+			System.out.println("load game complete" + currentLevel);
+			openGame();
 			
-			//if saved, load the saved level
-			File saveFile = new File(PuzzleUtil.SAVE_PATH+levelName+".save");
-			if (saveFile.exists())
-				createLevelElements(saveFile);
-			else //if no save, load the level file
-				createLevelElements(new File(PuzzleUtil.LEVEL_PATH+levelName));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void openGame() {
+		//for save or load, it will do this
+		
+		if(!isGameOpen) {
+			isGameOpen  = true;
 			
-			currentLevel = levelName;
-				
-		} catch (FileNotFoundException fnfe) {
-	        System.out.println("An error occurred.");
-	        fnfe.printStackTrace();
-	    }
+			ta = new GameTimer();
+			ta.start();
+			
+			FlowPane fp = new FlowPane();
+			fp.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+			
+			levelCanvas = new LoadLevel();
+			fp.getChildren().add(levelCanvas);
+			
+			Scene scene = new Scene(fp, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
+			scene.setOnKeyPressed(new KeyListenerDown(zack));
+			scene.setOnKeyReleased(new KeyListenerUp(zack));
+			applicationStage.setScene(scene);
+			applicationStage.show();
+		}
+		
+		//load the level
+		loadLevel();
+		
 	}
 
 	private void createLevelElements(File levelFile) throws FileNotFoundException {
 		fadeValue = 100;
 		fadeDirection = -1;
+		
+		System.out.println("create " + currentLevel);
+		System.out.println("file" + levelFile);
 		
 		levelElements.clear();
         Scanner scan = new Scanner(levelFile);
@@ -300,11 +340,12 @@ public class Puzzle extends Application {
 				e.update(millis);
 			}
 			//change the level after fade out finishes
-			if( fadeValue == 100 ) {
+			if( fadeValue == 100 && changingLevel != null) {
 				fadeDirection = -1;
-				saveAndLoadNextLevel(changingLevel);
+				saveLevel();
+				currentLevel = changingLevel;
 				changingLevel = null;
-				zack.goTo(destinationX, destinationY);
+				loadLevel();
 			}
 			else if (changingLevel == null)
 				zack.update(millis);
@@ -320,9 +361,9 @@ public class Puzzle extends Application {
 				}
 			}
 			//if there was an object in the way
-			if(isCollision)
+			if(isCollision) 
 				zack.goTo(tempX, tempY);
-			
+				
 			//draw the level
 			levelCanvas.draw();			
 		}
@@ -335,22 +376,23 @@ public class Puzzle extends Application {
 		destinationX = x;
 		destinationY = y;
 	}
+	
 	public void stopPlayer() {
 		isCollision = true;
 	}
+	
 	public void launchPlayer(Dir direction) {
-		int millis = 50;
 		if(direction.toString().equals("left")) {
 			//zack.setDirection(direction, false);
 			for(int i = 1; i < 15; i++) {
-				zack.setLocation(zack.getX()-i,zack.getY());
+				zack.goTo(zack.getX()-i,zack.getY());
 			}
 			
 		}
 		if(direction.toString().equals("right")) {
 			//zack.setDirection(direction, false);
 			for(int i = 1; i < 15; i++) {
-				zack.setLocation(zack.getX()+i,zack.getY()); 
+				zack.goTo(zack.getX()+i,zack.getY()); 
 			}
 		}
 	}
@@ -365,9 +407,99 @@ public class Puzzle extends Application {
 		
 	}
 	
-	public void createSaveFile() {
-		//We need to create a save file telling where the player is, what level they were on...
-		//The other save files should already be present in src/saves
+	public void deleteFilesAtPath(String path) {
+		File dir = new File(path);
+		if (dir.exists() && dir.isDirectory()) {
+			File files[] = dir.listFiles();
+			for (File f : files) {
+				if (f.isFile())
+					f.delete();
+			}
+		} else 
+			dir.mkdir();
+	}
+	
+	public void saveLevel() {
+		try {
+			//save the current level to save file
+			if(currentLevel != null) {
+				PrintWriter pw = new PrintWriter(new File(PuzzleUtil.SAVE_PATH+currentLevel+".save"));
+				for(Element e : levelElements) {
+					pw.println(e.toString());			
+				}
+				pw.close();
+			}
+		} catch (FileNotFoundException fnfe) {
+	        fnfe.printStackTrace();
+	    }
+	}
+	
+	//set the player and create the elements from the file
+	public void loadLevel() {
+		try {
+			File saveFile = new File(PuzzleUtil.SAVE_PATH+currentLevel+".save");
+			if (saveFile.exists()) //if saved, load the saved level
+				createLevelElements(saveFile);
+			else //if no save, load the level file
+				createLevelElements(new File(PuzzleUtil.LEVEL_PATH+currentLevel));
+			
+			zack.goTo(destinationX, destinationY);
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void restartLevel() {
+		startGame();
+	}
+
+	public void restartArea() {
+		//put the player back at the destination x and y, reload save file
+		zack.goTo(destinationX, destinationY);
+		loadLevel();
+	}
+	
+	public void createLoadDir() {
+		//delete files in load dir
+		deleteFilesAtPath(PuzzleUtil.LOAD_PATH);
+		saveLevel();
+		try {
+			Scanner s;
+			PrintWriter pw;
+			
+			File saveDir = new File(PuzzleUtil.SAVE_PATH);
+			for (File f : saveDir.listFiles()) {
+				if(f.isFile()) {
+					String fileName = f.getName();
+					String name = fileName.contains(".") ? fileName.substring(0, fileName.indexOf('.')) + ".load" : fileName+".load";
+					System.out.println(name);
+					File loadFile = new File(PuzzleUtil.LOAD_PATH + name);
+					loadFile.createNewFile();
+	
+					//copy file into new save file
+					pw = new PrintWriter(loadFile);
+					s = new Scanner(f);
+					while (s.hasNextLine()) {
+						pw.println(s.nextLine());
+					}
+					pw.close();
+					s.close();
+				}
+			} 
+			
+			//finally, create a data file to track level and location
+			File dataFile = new File(PuzzleUtil.LOAD_FILE);
+			dataFile.createNewFile();
+			pw = new PrintWriter(dataFile);
+			pw.print(currentLevel + " " + zack.getX() + " " + zack.getY());
+			pw.close();
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//key inputs
