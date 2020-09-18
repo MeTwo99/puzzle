@@ -10,21 +10,23 @@ public class Door extends Element{
 	private final static int DOOR_WIDTH = 83;
 	private final static int DOOR_HEIGHT = 184;
 	private final static int DOOR_ADVANCE_WAIT = 5;
-	private final static int DOOR_MAX_WAIT_VALUE = 140;
+	private final static int DOOR_OPEN_DURATION = 30;
 	private int wait;
 	private int advanceWait;
-	private int minWait;
-	private int maxWait;
 	private int doorFrame;
 	private Puzzle puzzle;
+	private int active;
+	private String name, openNextName;
+	private boolean isPlayerTouching, isClosed = true; // variable that will stop the player
 	
-	public Door(int x, int y, int w, int h, int wait, int minWait, int maxWait, Puzzle p) {
+	public Door(int x, int y, int w, int h, int active, String name, String openNextName, Puzzle p) {
 		super(x,y,w,h);
-		this.wait = wait;
-		this.minWait = minWait;
-		this.maxWait = maxWait;
+		this.active = active;
+		this.name = name;
+		this.openNextName = openNextName;
 		puzzle = p;
 		advanceWait = 0;
+		isPlayerTouching = false;
 	}
 	
 	@Override
@@ -35,25 +37,55 @@ public class Door extends Element{
 	@Override
 	//every frame, do this
 	public void update(long millis) {
-		advanceWait += 1;
-		if (advanceWait > DOOR_ADVANCE_WAIT) {
-			advanceWait = 0;
-			wait = wait > DOOR_MAX_WAIT_VALUE ? 0 : wait + 1;
-			
-			if(wait > minWait && wait < maxWait) {
-				//open door
-				doorFrame = doorFrame < 3 ? doorFrame + 1 : 3;
-			}
-			else {
-				//shut the door
-				doorFrame = doorFrame > 0 ? doorFrame - 1 : 0;
+		if(active == 1) {
+			advanceWait += 1;
+			if (advanceWait > DOOR_ADVANCE_WAIT) {
+				advanceWait = 0;
+				wait += 1;
+				
+				if(wait < DOOR_OPEN_DURATION) {
+					//open door
+					isClosed = false;
+					doorFrame = doorFrame < 3 ? doorFrame + 1 : 3;
+				}
+				else {
+					//check can close door?
+					if  (!isPlayerTouching) {
+						//start closing when the player is out of the way
+						isClosed = true; 
+					}
+					if(isClosed) {
+						//stop the player from moving into the wall
+						doorFrame = doorFrame > 0 ? doorFrame - 1 : 0;
+					}
+				}
+				
+				//once cycle is complete, send message to the next door
+				if (doorFrame == 0 && isClosed) {
+					active = 0;
+					puzzle.setDoorActive(openNextName);
+				}
 			}
 		}
+		//reset check player collision
+		isPlayerTouching = false;
+	}
+	
+	//get the door with the name to open
+	public String getName() {
+		return name;
+	}
+	//activate that door
+	public void setActive() {
+		wait = 0;
+		advanceWait = 0;
+		active = 1;
 	}
 	
 	@Override
 	public void onCollision(boolean isOn) {
-		if(doorFrame == 0)
+		isPlayerTouching = true;
+		if(isClosed)
 			puzzle.stopPlayer();
 	}
 	
@@ -65,9 +97,9 @@ public class Door extends Element{
 		a.add(new Integer(y));
 		a.add(new Integer(w));
 		a.add(new Integer(h));
-		a.add(new Integer(wait));
-		a.add(new Integer(minWait));
-		a.add(new Integer(maxWait));
+		a.add(new Integer(active));
+		a.add(new String(name));
+		a.add(new String(openNextName));
 		return PuzzleUtil.getSaveData(a);
 	}
 }

@@ -44,6 +44,7 @@ public class Puzzle extends Application {
 	private boolean isCollision;
 	private DropMenu dropMenu= new DropMenu(this);
 	private boolean isGameOpen = false;
+	private Door activateDoor = null;
 	
 	public static void main(String args[]) {
 		//before anything, make sure there are these paths
@@ -150,7 +151,6 @@ public class Puzzle extends Application {
 			File dataFile = new File(PuzzleUtil.LOAD_FILE); //data file has level destination and player x y
 			s = new Scanner(dataFile);
 			currentLevel = s.next();
-			System.out.println(">" + currentLevel + "<");
 			destinationX = s.nextInt();
 			destinationY = s.nextInt();
 			s.close();
@@ -160,7 +160,6 @@ public class Puzzle extends Application {
 				String fileName = f.getName();
 				if (fileName.contains(".load")) { //not the data file
 					String name = fileName.substring(0, fileName.indexOf('.')) + ".save";
-					System.out.println(name);
 					File saveFile = new File(PuzzleUtil.SAVE_PATH+name);
 					saveFile.createNewFile();
 					
@@ -174,7 +173,6 @@ public class Puzzle extends Application {
 					s.close();
 				}
 			}
-			System.out.println("load game complete" + currentLevel);
 			openGame();
 			
 		} catch (FileNotFoundException e) {
@@ -214,9 +212,6 @@ public class Puzzle extends Application {
 	private void createLevelElements(File levelFile) throws FileNotFoundException {
 		fadeValue = 100;
 		fadeDirection = -1;
-		
-		System.out.println("create " + currentLevel);
-		System.out.println("file" + levelFile);
 		
 		levelElements.clear();
         Scanner scan = new Scanner(levelFile);
@@ -269,10 +264,10 @@ public class Puzzle extends Application {
 				  levelElements.add(new Screwdriver(v[0], v[1], v[2], v[3], Integer.parseInt(data[5]), this));
 				  break;
 			  case "door":
-				  levelElements.add(new Door(v[0], v[1], v[2], v[3], Integer.parseInt(data[5]), Integer.parseInt(data[6]), Integer.parseInt(data[7]),this));
+				  levelElements.add(new Door(v[0], v[1], v[2], v[3], Integer.parseInt(data[5]), data[6], data[7],this));
 				  break;
 				}
-			} catch (ArrayIndexOutOfBoundsException e) {
+			} catch (Exception e) {
 				System.out.println("Error with line:" + l);
 				e.printStackTrace();
 			}
@@ -334,6 +329,12 @@ public class Puzzle extends Application {
 			//every frame, do this (60 FPS)
 			
 			int tempX = zack.getX(), tempY = zack.getY();
+			
+			//check to activate doors
+			if(activateDoor != null) {
+				activateDoor.setActive();
+				activateDoor = null;
+			}
 			
 			//update all data
 			for (Element e : levelElements) {
@@ -458,6 +459,17 @@ public class Puzzle extends Application {
 		//put the player back at the destination x and y, reload save file
 		zack.goTo(destinationX, destinationY);
 		loadLevel();
+	}
+	
+	public void setDoorActive(String doorName) {
+		for(Element e : levelElements) {
+			if (e instanceof Door) {
+				Door d = (Door) e;
+				if (d.getName().equals(doorName)) {
+					activateDoor = d;
+				}
+			}
+		}
 	}
 	
 	public void createLoadDir() {
