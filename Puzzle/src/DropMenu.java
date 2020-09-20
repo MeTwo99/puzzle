@@ -9,7 +9,7 @@ public class DropMenu{
 	private static final int MENU_ITEM_WIDTH = 200;
 	private static final int MENU_ITEM_HEIGHT = 50;
 	private ArrayList<MenuItem> items = new ArrayList<MenuItem>();
-	private final String [] itemNames = {"Restart Area", "Restart Level", "Save Game", "Load Game", "Quit"};
+	private final String [] itemNames = {"About", "Restart Area", "Restart Level", "Save Game", "Load Game", "Clipboard", "Quit"};
 	private Puzzle puzzle;
 	private int selected = 0;
 	private boolean shown = false;
@@ -105,6 +105,9 @@ public class DropMenu{
 		//Based on the name, we should call a function in the puzzle
 		public void doAction() {
 			switch(name) {
+			case "About":
+				puzzle.aboutScreen();
+				break;
 			case "Restart Area":
 				puzzle.restartArea();
 				break;
@@ -116,6 +119,9 @@ public class DropMenu{
 				break;
 			case "Load Game":
 				puzzle.loadGame();
+				break;
+			case "Clipboard":
+				puzzle.showClipboard();
 				break;
 			case "Quit":
 				System.exit(0);

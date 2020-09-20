@@ -1,4 +1,9 @@
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javax.swing.SwingUtilities;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -34,6 +39,12 @@ public class CirclePlate extends Element{
 		if(status == 0) {
 			puzzle.activateColor(color);
 			status = 1;
+			
+			ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+			Runnable task = () -> SwingUtilities.invokeLater(() -> puzzle.activateColor(color));
+			Runnable task2 = () -> SwingUtilities.invokeLater(() -> status = 0);
+			executor.schedule(task,  30, TimeUnit.SECONDS);
+			executor.schedule(task2,  30, TimeUnit.SECONDS);
 		}
 	};
 	

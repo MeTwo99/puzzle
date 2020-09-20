@@ -405,7 +405,6 @@ public class Puzzle extends Application {
 					s.changeStatus();
 			}
 		}
-		
 	}
 	
 	public void deleteFilesAtPath(String path) {
@@ -451,6 +450,10 @@ public class Puzzle extends Application {
 		}
 	}
 	
+	public void aboutScreen() {
+		
+	}
+	
 	public void restartLevel() {
 		startGame();
 	}
@@ -459,6 +462,10 @@ public class Puzzle extends Application {
 		//put the player back at the destination x and y, reload save file
 		zack.goTo(destinationX, destinationY);
 		loadLevel();
+	}
+	
+	public void showClipboard() {
+		
 	}
 	
 	public void setDoorActive(String doorName) {
