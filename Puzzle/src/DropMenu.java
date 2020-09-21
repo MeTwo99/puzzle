@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -13,6 +14,11 @@ public class DropMenu{
 	private Puzzle puzzle;
 	private int selected = 0;
 	private boolean shown = false;
+	private GraphicsContext gc;
+	private boolean aboutStatus;
+	private boolean clipboardStatus;
+	private final static Image ABOUT = new Image(PuzzleUtil.FILE_PATH_RES+"aboutScreen.png", false);
+	private final static Image CLIPBOARD = new Image(PuzzleUtil.FILE_PATH_RES+"clipboard.png", false);
 	
 	//init with menu items
 	public DropMenu(Puzzle p) {
@@ -59,11 +65,42 @@ public class DropMenu{
 		}
 		items.get(index).setSelected(true);
 	}
+	
+	public boolean getAboutStatus() {
+		return aboutStatus;
+	}
+	
+	//make aboutScreen false, so it doesnt show
+	public void setAboutStatus(boolean b) {
+		aboutStatus = b;
+	}
+	
+	public boolean getClipboardStatus() {
+		return clipboardStatus;
+	}
+	
+	//make aboutScreen false, so it doesnt show
+	public void setClipboardStatus(boolean b) {
+		clipboardStatus = b;
+	}
 
 	//draw the whole menu
 	public void draw(GraphicsContext gc) {
 		for (int i = 0; i < items.size(); i++)
 			items.get(i).draw(gc);
+		
+		if(aboutStatus) {
+			drawScreen(gc, ABOUT);
+		}
+		else if(clipboardStatus) {
+			drawScreen(gc, CLIPBOARD);
+		}
+	}
+	
+	//draw about screen
+	public void drawScreen(GraphicsContext gc, Image image) {
+		if(image == ABOUT) gc.drawImage(image, 0, 0, 500, 300, 220, 0, 833, 500);
+		else if(image == CLIPBOARD) gc.drawImage(image, 0, 0, 1526, 926, 220, 0, 987, 500);
 	}
 	
 	//define class MenuItem -- each item is drawn and can be selected and 
@@ -99,14 +136,13 @@ public class DropMenu{
 			gc.setFont(Font.font("Helvetica", FontWeight.SEMI_BOLD, 25));
 			gc.setFill(Color.WHITE);
 			gc.fillText(name, x+15, y+MENU_ITEM_HEIGHT-15);
-			
 		}
 		
 		//Based on the name, we should call a function in the puzzle
 		public void doAction() {
 			switch(name) {
 			case "About":
-				puzzle.aboutScreen();
+				aboutStatus = true;
 				break;
 			case "Restart Area":
 				puzzle.restartArea();
@@ -121,14 +157,14 @@ public class DropMenu{
 				puzzle.loadGame();
 				break;
 			case "Clipboard":
-				puzzle.showClipboard();
+				clipboardStatus = true;
 				break;
 			case "Quit":
 				System.exit(0);
 				break;
 			}
 			//close the options after a user makes a selection
-			menu.setShown(false);
+			if(!aboutStatus && !clipboardStatus) menu.setShown(false);
 		}
 	}
 

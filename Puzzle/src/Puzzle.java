@@ -452,6 +452,28 @@ public class Puzzle extends Application {
 	
 	public void aboutScreen() {
 		
+		Image aboutScreen = new Image(PuzzleUtil.FILE_PATH_RES+"aboutScreen.png", false);	
+		BackgroundImage aboutImage = new BackgroundImage(aboutScreen, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+		
+
+		FlowPane fp = new FlowPane();
+		fp.setBackground(new Background(aboutImage));
+		fp.setPrefSize(500, 300);
+		
+		//turn it on         
+		Scene scene = new Scene(fp);
+		applicationStage.setScene(scene);
+		applicationStage.setTitle("About Screen");
+		applicationStage.show();
+		
+		//levelCanvas = new LoadLevel();
+		//fp.getChildren().add(levelCanvas);
+		
+		/*Scene scene = new Scene(fp, 500, 300);
+		scene.setOnKeyPressed(new KeyListenerDown(zack));
+		scene.setOnKeyReleased(new KeyListenerUp(zack));
+		applicationStage.setScene(scene);
+		applicationStage.show();*/
 	}
 	
 	public void restartLevel() {
@@ -531,10 +553,20 @@ public class Puzzle extends Application {
 		public void handle(KeyEvent event) {
 			
 			if(event.getCode() == KeyCode.ESCAPE) {
-				dropMenu.setShown(!dropMenu.isShown());
+				if(!dropMenu.getAboutStatus() && !dropMenu.getClipboardStatus())
+					dropMenu.setShown(!dropMenu.isShown());
+				else dropMenu.setShown(true);
 				dropMenu.setSelected(0);
 			}
-			if(dropMenu.isShown()) {
+			if(dropMenu.isShown() && dropMenu.getAboutStatus() || dropMenu.getClipboardStatus()) {
+				if(event.getCode() == KeyCode.ESCAPE && dropMenu.getAboutStatus()) {
+					dropMenu.setAboutStatus(false);
+				}
+				else if(event.getCode() == KeyCode.ESCAPE && dropMenu.getClipboardStatus()) {
+					dropMenu.setClipboardStatus(false);
+				}
+			}
+			else if(dropMenu.isShown() && !dropMenu.getAboutStatus() && !dropMenu.getClipboardStatus()) {
 				//stop the player and set the select on the first position
 				p.setWalking(false);
 				//control the menu
