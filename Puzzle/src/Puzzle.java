@@ -222,7 +222,14 @@ public class Puzzle extends Application {
             	continue;
           String[] data = l.split(",");
           
-          try {
+          //gameover
+          if(data[0].equals("winner")) {
+        	 userWins = true;
+          }
+          
+          else {
+        	  try {
+          
         	  //the x,y,w,h common to all elements
 			  int[] v = new int[4];
 			  for(int i = 0; i < 4; i++)
@@ -267,15 +274,12 @@ public class Puzzle extends Application {
 			  case "door":
 				  levelElements.add(new Door(v[0], v[1], v[2], v[3], Integer.parseInt(data[5]), data[6], data[7],this));
 				  break;
-			  //game over user wins!
-			  case "winner":
-				  userWins = true;
-				  break;
 				}
 			} catch (Exception e) {
 				System.out.println("Error with line:" + l);
 				e.printStackTrace();
 			}
+          }
 		}
 		scan.close();
 	}
@@ -313,6 +317,9 @@ public class Puzzle extends Application {
 			//drop menu drawn
 			if(dropMenu.isShown())
 				dropMenu.draw(gc);
+			if(userWins) {
+				endScreen();
+			}
 		}
 	}	 
 	
@@ -323,62 +330,56 @@ public class Puzzle extends Application {
 		
 		@Override
 		public void handle(long millis) {
-			//check if game has been won
-			if(userWins){
-				//show winner screen
+			
+			sec += (millis - prevTime);
+			frame += 1;
+			if (sec > PuzzleUtil.NANO_IN_SEC) {
+				sec -= PuzzleUtil.NANO_IN_SEC;
+				System.out.println("FPS:"+frame);
+				frame = 0;
 			}
-			else{
-				
-				sec += (millis - prevTime);
-				frame += 1;
-				if (sec > PuzzleUtil.NANO_IN_SEC) {
-					sec -= PuzzleUtil.NANO_IN_SEC;
-					System.out.println("FPS:"+frame);
-					frame = 0;
-				}
-				prevTime = millis;
-				//every frame, do this (60 FPS)
-				
-				int tempX = zack.getX(), tempY = zack.getY();
-				
-				//check to activate doors
-				if(activateDoor != null) {
-					activateDoor.setActive();
-					activateDoor = null;
-				}
-				
-				//update all data
-				for (Element e : levelElements) {
-					e.update(millis);
-				}
-				//change the level after fade out finishes
-				if( fadeValue == 100 && changingLevel != null) {
-					fadeDirection = -1;
-					saveLevel();
-					currentLevel = changingLevel;
-					changingLevel = null;
-					loadLevel();
-				}
-				else if (changingLevel == null)
-					zack.update(millis);
-				
-				isCollision = false;
-				Element zackHitbox = new Tile(zack.getX()+10, zack.getY()+50, zack.getW()-20, zack.getH()-60, null);
-				//check collisions
-				for (Element e : levelElements) {
-					if (PuzzleUtil.isCollision(zackHitbox, e)) {
-						e.onCollision(PuzzleUtil.isOn(zackHitbox,e));
-						if (e instanceof Wall)
-							isCollision = true; 
-					}
-				}
-				//if there was an object in the way
-				if(isCollision) 
-					zack.goTo(tempX, tempY);
-					
-				//draw the level
-				levelCanvas.draw();			
+			prevTime = millis;
+			//every frame, do this (60 FPS)
+			
+			int tempX = zack.getX(), tempY = zack.getY();
+			
+			//check to activate doors
+			if(activateDoor != null) {
+				activateDoor.setActive();
+				activateDoor = null;
 			}
+			
+			//update all data
+			for (Element e : levelElements) {
+				e.update(millis);
+			}
+			//change the level after fade out finishes
+			if( fadeValue == 100 && changingLevel != null) {
+				fadeDirection = -1;
+				saveLevel();
+				currentLevel = changingLevel;
+				changingLevel = null;
+				loadLevel();
+			}
+			else if (changingLevel == null)
+				zack.update(millis);
+			
+			isCollision = false;
+			Element zackHitbox = new Tile(zack.getX()+10, zack.getY()+50, zack.getW()-20, zack.getH()-60, null);
+			//check collisions
+			for (Element e : levelElements) {
+				if (PuzzleUtil.isCollision(zackHitbox, e)) {
+					e.onCollision(PuzzleUtil.isOn(zackHitbox,e));
+					if (e instanceof Wall)
+						isCollision = true; 
+				}
+			}
+			//if there was an object in the way
+			if(isCollision) 
+				zack.goTo(tempX, tempY);
+				
+			//draw the level
+			levelCanvas.draw();			
 		}
 	}
 	
@@ -462,30 +463,19 @@ public class Puzzle extends Application {
 		}
 	}
 	
-	public void aboutScreen() {
+	public void endScreen() {
+		Image endScreen = new Image(PuzzleUtil.FILE_PATH_RES+"gameover.png", false);	
+		BackgroundImage endImage = new BackgroundImage(endScreen, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 		
-		Image aboutScreen = new Image(PuzzleUtil.FILE_PATH_RES+"aboutScreen.png", false);	
-		BackgroundImage aboutImage = new BackgroundImage(aboutScreen, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-		
-
 		FlowPane fp = new FlowPane();
-		fp.setBackground(new Background(aboutImage));
-		fp.setPrefSize(500, 300);
+		fp.setBackground(new Background(endImage));
+		fp.setPrefSize(PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 		
 		//turn it on         
 		Scene scene = new Scene(fp);
 		applicationStage.setScene(scene);
-		applicationStage.setTitle("About Screen");
+		applicationStage.setTitle("End Screen");
 		applicationStage.show();
-		
-		//levelCanvas = new LoadLevel();
-		//fp.getChildren().add(levelCanvas);
-		
-		/*Scene scene = new Scene(fp, 500, 300);
-		scene.setOnKeyPressed(new KeyListenerDown(zack));
-		scene.setOnKeyReleased(new KeyListenerUp(zack));
-		applicationStage.setScene(scene);
-		applicationStage.show();*/
 	}
 	
 	public void restartLevel() {
