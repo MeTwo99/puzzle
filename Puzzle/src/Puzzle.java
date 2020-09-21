@@ -475,7 +475,7 @@ public class Puzzle extends Application {
 		Scene scene = new Scene(fp);
 		applicationStage.setScene(scene);
 		applicationStage.setTitle("End Screen");
-		applicationStage.show();
+		//applicationStage.show();
 	}
 	
 	public void restartLevel() {
