@@ -33,6 +33,7 @@ class PuzzleUtil{
 		TEXTURES.put("brick", new Image(FILE_PATH_RES+"wall.jpg", false));
 		TEXTURES.put("jukebox", new Image(FILE_PATH_RES+"jukeboxes.png", false));
 		TEXTURES.put("none", null);
+		TEXTURES.put("winning", new Image(FILE_PATH_RES+"gameover.png", false));
 	}
 	
 	//checks if elements are overlapping

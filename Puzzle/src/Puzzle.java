@@ -45,6 +45,7 @@ public class Puzzle extends Application {
 	private DropMenu dropMenu= new DropMenu(this);
 	private boolean isGameOpen = false;
 	private Door activateDoor = null;
+	private boolean userWins = false;
 	
 	public static void main(String args[]) {
 		//before anything, make sure there are these paths
@@ -266,6 +267,10 @@ public class Puzzle extends Application {
 			  case "door":
 				  levelElements.add(new Door(v[0], v[1], v[2], v[3], Integer.parseInt(data[5]), data[6], data[7],this));
 				  break;
+			  //game over user wins!
+			  case "winner":
+				  userWins = true;
+				  break;
 				}
 			} catch (Exception e) {
 				System.out.println("Error with line:" + l);
@@ -318,55 +323,62 @@ public class Puzzle extends Application {
 		
 		@Override
 		public void handle(long millis) {
-			sec += (millis - prevTime);
-			frame += 1;
-			if (sec > PuzzleUtil.NANO_IN_SEC) {
-				sec -= PuzzleUtil.NANO_IN_SEC;
-				System.out.println("FPS:"+frame);
-				frame = 0;
+			//check if game has been won
+			if(userWins){
+				//show winner screen
 			}
-			prevTime = millis;
-			//every frame, do this (60 FPS)
-			
-			int tempX = zack.getX(), tempY = zack.getY();
-			
-			//check to activate doors
-			if(activateDoor != null) {
-				activateDoor.setActive();
-				activateDoor = null;
-			}
-			
-			//update all data
-			for (Element e : levelElements) {
-				e.update(millis);
-			}
-			//change the level after fade out finishes
-			if( fadeValue == 100 && changingLevel != null) {
-				fadeDirection = -1;
-				saveLevel();
-				currentLevel = changingLevel;
-				changingLevel = null;
-				loadLevel();
-			}
-			else if (changingLevel == null)
-				zack.update(millis);
-			
-			isCollision = false;
-			Element zackHitbox = new Tile(zack.getX()+10, zack.getY()+50, zack.getW()-20, zack.getH()-60, null);
-			//check collisions
-			for (Element e : levelElements) {
-				if (PuzzleUtil.isCollision(zackHitbox, e)) {
-					e.onCollision(PuzzleUtil.isOn(zackHitbox,e));
-					if (e instanceof Wall)
-						isCollision = true; 
-				}
-			}
-			//if there was an object in the way
-			if(isCollision) 
-				zack.goTo(tempX, tempY);
+			else{
 				
-			//draw the level
-			levelCanvas.draw();			
+				sec += (millis - prevTime);
+				frame += 1;
+				if (sec > PuzzleUtil.NANO_IN_SEC) {
+					sec -= PuzzleUtil.NANO_IN_SEC;
+					System.out.println("FPS:"+frame);
+					frame = 0;
+				}
+				prevTime = millis;
+				//every frame, do this (60 FPS)
+				
+				int tempX = zack.getX(), tempY = zack.getY();
+				
+				//check to activate doors
+				if(activateDoor != null) {
+					activateDoor.setActive();
+					activateDoor = null;
+				}
+				
+				//update all data
+				for (Element e : levelElements) {
+					e.update(millis);
+				}
+				//change the level after fade out finishes
+				if( fadeValue == 100 && changingLevel != null) {
+					fadeDirection = -1;
+					saveLevel();
+					currentLevel = changingLevel;
+					changingLevel = null;
+					loadLevel();
+				}
+				else if (changingLevel == null)
+					zack.update(millis);
+				
+				isCollision = false;
+				Element zackHitbox = new Tile(zack.getX()+10, zack.getY()+50, zack.getW()-20, zack.getH()-60, null);
+				//check collisions
+				for (Element e : levelElements) {
+					if (PuzzleUtil.isCollision(zackHitbox, e)) {
+						e.onCollision(PuzzleUtil.isOn(zackHitbox,e));
+						if (e instanceof Wall)
+							isCollision = true; 
+					}
+				}
+				//if there was an object in the way
+				if(isCollision) 
+					zack.goTo(tempX, tempY);
+					
+				//draw the level
+				levelCanvas.draw();			
+			}
 		}
 	}
 	
