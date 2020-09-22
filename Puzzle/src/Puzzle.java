@@ -307,6 +307,10 @@ public class Puzzle extends Application {
 			//render the player
 			zack.draw(gc);
 			
+			//game over screen
+			if(userWins)
+				endScreen(gc);
+			
 			//fade screen
 			if((fadeValue > 0 && fadeDirection == -1) || (fadeValue < 100 && fadeDirection == 1)) {
 				fadeValue += fadeDirection;
@@ -317,9 +321,6 @@ public class Puzzle extends Application {
 			//drop menu drawn
 			if(dropMenu.isShown())
 				dropMenu.draw(gc);
-			if(userWins) {
-				endScreen();
-			}
 		}
 	}	 
 	
@@ -463,19 +464,9 @@ public class Puzzle extends Application {
 		}
 	}
 	
-	public void endScreen() {
+	public void endScreen(GraphicsContext gc) {
 		Image endScreen = new Image(PuzzleUtil.FILE_PATH_RES+"gameover.png", false);	
-		BackgroundImage endImage = new BackgroundImage(endScreen, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-		
-		FlowPane fp = new FlowPane();
-		fp.setBackground(new Background(endImage));
-		fp.setPrefSize(PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
-		
-		//turn it on         
-		Scene scene = new Scene(fp);
-		applicationStage.setScene(scene);
-		applicationStage.setTitle("End Screen");
-		//applicationStage.show();
+		gc.drawImage(endScreen, 0, 0, PuzzleUtil.MAX_WIDTH, PuzzleUtil.MAX_HEIGHT);
 	}
 	
 	public void restartLevel() {
