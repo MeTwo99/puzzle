@@ -1,7 +1,6 @@
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+
 import javax.swing.SwingUtilities;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -13,12 +12,14 @@ public class CirclePlate extends Element{
 	private Col color;
 	private int status;
 	private Puzzle puzzle;
+	private Integer timeRemaining;
 	
-	public CirclePlate(int x, int y, int w, int h, Col c, int status, Puzzle p) {
+	public CirclePlate(int x, int y, int w, int h, Col c, int status, Integer timeIn, Puzzle p) {
 		super(x,y,w,h);
 		color = c;
 		this.status = status;
 		puzzle = p;
+		timeRemaining = timeIn;
 	}
 	
 	@Override
@@ -32,6 +33,11 @@ public class CirclePlate extends Element{
 	//every frame, do this
 	public void update(long millis) {
 		//advance when button pushed
+		if(timeRemaining == 0 && status == 1) {
+			puzzle.activateColor(color); 
+			status = 0;
+		}
+		else timeRemaining--;
 	}
 	
 	@Override
@@ -39,13 +45,9 @@ public class CirclePlate extends Element{
 		if(status == 0) {
 			puzzle.activateColor(color);
 			status = 1;
-			
-			ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-			Runnable task = () -> SwingUtilities.invokeLater(() -> puzzle.activateColor(color));
-			Runnable task2 = () -> SwingUtilities.invokeLater(() -> status = 0);
-			executor.schedule(task,  30, TimeUnit.SECONDS);
-			executor.schedule(task2,  30, TimeUnit.SECONDS);
+			timeRemaining = 1800;
 		}
+		
 	};
 	
 	@Override
@@ -58,6 +60,7 @@ public class CirclePlate extends Element{
 		a.add(new Integer(h));
 		a.add(new String(color.toString()));		
 		a.add(new Integer(status));
+		a.add(new Integer(timeRemaining));
 		return PuzzleUtil.getSaveData(a);
 	}
 }

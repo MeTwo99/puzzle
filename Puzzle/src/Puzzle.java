@@ -258,7 +258,7 @@ public class Puzzle extends Application {
 				  break;
 			  case "cp":
 				  color = new Col(data[5]);
-				  levelElements.add(new CirclePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), this));
+				  levelElements.add(new CirclePlate(v[0], v[1], v[2], v[3], color, Integer.parseInt(data[6]), Integer.parseInt(data[7]), this));
 				  break;
 			  case "spike":
 				  color = new Col(data[5]);
